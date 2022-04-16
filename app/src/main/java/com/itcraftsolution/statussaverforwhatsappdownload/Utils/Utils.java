@@ -7,7 +7,7 @@ import java.io.File;
 public class Utils {
 
     public static File RootDirectorywhatsapp =
-            new File(Environment.getExternalStorageDirectory()+ "/Download/StatusSaverWhatsapp/whatsapp");
+            new File(Environment.getExternalStorageDirectory()+ "/StatusSaver/");
 
     public static void createFileFolder()
     {

@@ -18,7 +18,7 @@ public class HomeFragment extends Fragment {
 
     private HomeTabVIewPagerAdapter adapter;
     private FragmentHomeBinding binding;
-    private String [] tabTitles = new String[]{"RECENT" , "SAVED"};
+    private String [] tabTitles = new String[]{"IMAGES" , "VIDEOS","SAVED"};
 
     public HomeFragment() {
         // Required empty public constructor

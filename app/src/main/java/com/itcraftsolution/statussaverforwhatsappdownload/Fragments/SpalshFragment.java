@@ -28,7 +28,7 @@ public class SpalshFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentSpalshBinding.inflate(getLayoutInflater());
 
-        String TagLine = "Status Saver";
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -37,7 +37,7 @@ public class SpalshFragment extends Fragment {
                 fragmentTransaction.replace(R.id.frMainContainer , new HomeFragment());
                 fragmentTransaction.commit();
             }
-        }, 2100);
+        }, 1200);
         return binding.getRoot();
     }
 }

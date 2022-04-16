@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/savedRefershView"
+    android:id="@+id/imageRefershView"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.SaveFragment">
+    tools:context=".Fragments.ImageFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSaved"
+        android:id="@+id/rvImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,5 +16,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

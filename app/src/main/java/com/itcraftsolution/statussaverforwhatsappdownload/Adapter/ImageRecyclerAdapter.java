@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -25,14 +24,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
-public class ResentDownloadAdapter extends RecyclerView.Adapter<ResentDownloadAdapter.viewHolder> {
-
+public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdapter.viewHolder> {
     Context context;
     ArrayList<Recents> list;
     String saveFilePath = Utils.RootDirectorywhatsapp+"/";
 
-    public ResentDownloadAdapter(Context context, ArrayList<Recents> list) {
+    public ImageRecyclerAdapter(Context context, ArrayList<Recents> list) {
         this.context = context;
         this.list = list;
     }
@@ -46,7 +43,6 @@ public class ResentDownloadAdapter extends RecyclerView.Adapter<ResentDownloadAd
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-
         Recents model = list.get(position);
 
         Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);

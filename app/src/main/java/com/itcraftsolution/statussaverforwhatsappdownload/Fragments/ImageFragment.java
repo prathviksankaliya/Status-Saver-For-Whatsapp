@@ -1,4 +1,3 @@
-
 package com.itcraftsolution.statussaverforwhatsappdownload.Fragments;
 
 import android.net.Uri;
@@ -14,54 +13,76 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ImageRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ResentDownloadAdapter;
-import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.SavedRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
-import com.itcraftsolution.statussaverforwhatsappdownload.R;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentImageBinding;
-import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentSaveBinding;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+public class ImageFragment extends Fragment {
 
-public class SaveFragment extends Fragment {
 
-    public SaveFragment() {
-        // Required empty public constructor
-    }
-
-    private FragmentSaveBinding binding;
+    private FragmentImageBinding binding;
     private ArrayList<Recents> list;
-    private SavedRecyclerAdapter adapter;
+    private ImageRecyclerAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        binding = FragmentImageBinding.inflate(getLayoutInflater());
 
-        binding = FragmentSaveBinding.inflate(getLayoutInflater());
 
         list = new ArrayList<>();
 
         File STATUS_DIRECTORY = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "StatusSaver/");
+                File.separator + "WhatsApp/Media/.Statuses");
 
+        File STATUS_DIRECTORY_NEW = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "Android/media/com.whatsapp/WhatsApp/Media/.Statuses");
+
+        File STATUS_DIRECTORY_GBWHATSAPP = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "/GBWhatsapp/Media/.statuses");
 
         if (STATUS_DIRECTORY.exists()) {
 
             getData(STATUS_DIRECTORY);
-            binding.savedRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
                     list = new ArrayList<>();
                     getData(STATUS_DIRECTORY);
-                    binding.savedRefershView.setRefreshing(false);
+                    binding.imageRefershView.setRefreshing(false);
                 }
             });
 
-        }  else {
+        } else if (STATUS_DIRECTORY_NEW.exists()) {
+
+            getData(STATUS_DIRECTORY_NEW);
+            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    list = new ArrayList<>();
+                    getData(STATUS_DIRECTORY_NEW);
+                    binding.imageRefershView.setRefreshing(false);
+                }
+            });
+
+        } else if (STATUS_DIRECTORY_GBWHATSAPP.exists()) {
+
+            getData(STATUS_DIRECTORY_GBWHATSAPP);
+            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    list = new ArrayList<>();
+                    getData(STATUS_DIRECTORY_GBWHATSAPP);
+                    binding.imageRefershView.setRefreshing(false);
+                }
+            });
+        } else {
 //            messageTextView.setVisibility(View.VISIBLE);
 //            messageTextView.setText(R.string.cant_find_whatsapp_dir);
 //            Toast.makeText(getActivity(), getString(R.string.cant_find_whatsapp_dir), Toast.LENGTH_SHORT).show();
@@ -70,10 +91,9 @@ public class SaveFragment extends Fragment {
             Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
         }
 
-        adapter = new SavedRecyclerAdapter(requireContext(), list);
-        binding.rvSaved.setAdapter(adapter);
-        binding.rvSaved.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-
+        adapter = new ImageRecyclerAdapter(requireContext(), list);
+        binding.rvImage.setAdapter(adapter);
+        binding.rvImage.setLayoutManager(new GridLayoutManager(requireContext(), 3));
 
         return binding.getRoot();
     }
@@ -109,13 +129,38 @@ public class SaveFragment extends Fragment {
         for (int i = 0; i < allfiles.length; i++) {
             File singlefile = allfiles[i];
 
-            if (Uri.fromFile(singlefile).toString().endsWith(".png") || Uri.fromFile(singlefile).toString().endsWith(".jpg") || Uri.fromFile(singlefile).toString().endsWith(".mp4")) {
+            if (Uri.fromFile(singlefile).toString().endsWith(".png") || Uri.fromFile(singlefile).toString().endsWith(".jpg")) {
                 model = new Recents("whats " + i, allfiles[i].getAbsolutePath(), singlefile.getName(), Uri.fromFile(singlefile));
 
                 list.add(model);
             }
         }
 
+//
+//        Arrays.sort(allfilesBusiness ,((o1, o2) ->{
+//            if(o1.lastModified() > o2.lastModified())
+//            {
+//                return -1;
+//            }
+//            else if(o1.lastModified() < o2.lastModified())
+//            {
+//                return +1;
+//            }
+//            else {
+//                return 0;
+//            }
+//        }));
+//
+//        for(int i = 0 ; i < allfilesBusiness.length; i++)
+//        {
+//            File file = allfilesBusiness[i] ;
+//
+//            if(Uri.fromFile(file).toString().endsWith(".png") || Uri.fromFile(file).toString().endsWith(".jpg") || Uri.fromFile(file).toString().endsWith(".mp4"))
+//            {
+//                model = new Recents("whatsBusiness "+i,allfilesBusiness[i].getAbsolutePath() , file.getName(), Uri.fromFile(file));
+//
+//                list.add(model);
+//            }
+//        }
     }
 }
-

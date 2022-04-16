@@ -7,12 +7,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.ImageFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.ResentFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.SaveFragment;
+import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.VideoFragment;
 
 public class HomeTabVIewPagerAdapter extends FragmentStateAdapter {
 
-    private String [] tabTitles = new String[]{"RECENT" , "SAVED"};
+    private String [] tabTitles = new String[]{"IMAGES" , "VIDEOS","SAVED"};
 
     public HomeTabVIewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
@@ -24,12 +26,14 @@ public class HomeTabVIewPagerAdapter extends FragmentStateAdapter {
         switch (position)
         {
             case 0 :
-                return new ResentFragment();
+                return new ImageFragment();
             case 1:
+                return new VideoFragment();
+            case 2:
                 return new SaveFragment();
         }
 
-        return new ResentFragment();
+        return new ImageFragment();
     }
 
     @Override
