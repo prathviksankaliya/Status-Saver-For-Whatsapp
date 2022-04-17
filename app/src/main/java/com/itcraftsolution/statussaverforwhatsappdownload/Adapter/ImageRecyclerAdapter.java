@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.ImageDetailsFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdapter.viewHolder> {
     Context context;
     ArrayList<Recents> list;
-    String saveFilePath = Utils.RootDirectorywhatsapp+"/";
 
     public ImageRecyclerAdapter(Context context, ArrayList<Recents> list) {
         this.context = context;
@@ -49,18 +49,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         holder.binding.btnDownloadResent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.createFileFolder();
-                final String path = model.getPath();
-                final File file = new File(path);
-                File destFile = new File(saveFilePath);
-
-                try {
-                    FileUtils.copyFileToDirectory(file , destFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Toast.makeText(context, "Saved To :"+saveFilePath, Toast.LENGTH_SHORT).show();
+                Utils.copyFile(model , context);
             }
         });
 

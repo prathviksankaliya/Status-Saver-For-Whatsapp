@@ -2,13 +2,16 @@ package com.itcraftsolution.statussaverforwhatsappdownload.Models;
 
 import android.net.Uri;
 
+import java.io.File;
+
 public class Recents {
 
-    private String name , path , filename;
+    private String name , path ;
     private Uri uri;
+    private File filename;
 
 
-    public Recents(String name, String path, String filename, Uri uri) {
+    public Recents(String name, String path, File filename, Uri uri) {
         this.name = name;
         this.path = path;
         this.filename = filename;
@@ -31,11 +34,11 @@ public class Recents {
         this.path = path;
     }
 
-    public String getFilename() {
+    public File getFilename() {
         return filename;
     }
 
-    public void setFilename(String filename) {
+    public void setFilename(File filename) {
         this.filename = filename;
     }
 

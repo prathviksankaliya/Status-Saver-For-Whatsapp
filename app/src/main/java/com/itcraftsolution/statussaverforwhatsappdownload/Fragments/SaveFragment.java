@@ -40,7 +40,6 @@ public class SaveFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         binding = FragmentSaveBinding.inflate(getLayoutInflater());
 
         list = new ArrayList<>();
@@ -52,28 +51,24 @@ public class SaveFragment extends Fragment {
         if (STATUS_DIRECTORY.exists()) {
 
             getData(STATUS_DIRECTORY);
+            adapter = new SavedRecyclerAdapter(requireContext(), list);
+            binding.rvSaved.setAdapter(adapter);
+            binding.rvSaved.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+
             binding.savedRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    list = new ArrayList<>();
+                    list.clear();
                     getData(STATUS_DIRECTORY);
+                    adapter.notifyDataSetChanged();
                     binding.savedRefershView.setRefreshing(false);
                 }
             });
 
         }  else {
-//            messageTextView.setVisibility(View.VISIBLE);
-//            messageTextView.setText(R.string.cant_find_whatsapp_dir);
-//            Toast.makeText(getActivity(), getString(R.string.cant_find_whatsapp_dir), Toast.LENGTH_SHORT).show();
-//            swipeRefreshLayout.setRefreshing(false);
 
             Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
         }
-
-        adapter = new SavedRecyclerAdapter(requireContext(), list);
-        binding.rvSaved.setAdapter(adapter);
-        binding.rvSaved.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-
 
         return binding.getRoot();
     }
@@ -83,18 +78,7 @@ public class SaveFragment extends Fragment {
 
         Recents model;
 
-//        String targetpath = Environment.getExternalStorageDirectory().getAbsolutePath()+
-//                "/Whatsapp/Media/.statuses";
-//        String targetpath = Environment.getExternalStorageDirectory().getAbsolutePath()+
-//                "/GBWhatsapp/Media/.statuses";
-
         File[] allfiles = file.listFiles();
-
-
-//        String targetpathBusiness = Environment.getExternalStorageDirectory().getAbsolutePath()+
-//                "/Whatsapp Business/Media/.statuses";
-//        File targetDicretryBusiness = new File(targetpathBusiness);
-//        File[] allfilesBusiness = targetDicretryBusiness.listFiles();
 
         Arrays.sort(allfiles, ((o1, o2) -> {
             if (o1.lastModified() > o2.lastModified()) {
@@ -110,7 +94,7 @@ public class SaveFragment extends Fragment {
             File singlefile = allfiles[i];
 
             if (Uri.fromFile(singlefile).toString().endsWith(".png") || Uri.fromFile(singlefile).toString().endsWith(".jpg") || Uri.fromFile(singlefile).toString().endsWith(".mp4")) {
-                model = new Recents("whats " + i, allfiles[i].getAbsolutePath(), singlefile.getName(), Uri.fromFile(singlefile));
+                model = new Recents("whats " + i, allfiles[i].getAbsolutePath(), singlefile, Uri.fromFile(singlefile));
 
                 list.add(model);
             }

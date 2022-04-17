@@ -31,6 +31,7 @@ public class HomeTabVIewPagerAdapter extends FragmentStateAdapter {
                 return new VideoFragment();
             case 2:
                 return new SaveFragment();
+
         }
 
         return new ImageFragment();

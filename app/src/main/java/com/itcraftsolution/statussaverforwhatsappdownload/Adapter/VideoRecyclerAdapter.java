@@ -49,21 +49,11 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
         Recents model = list.get(position);
 
         Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
+        holder.binding.igVideo.setVisibility(View.VISIBLE);
         holder.binding.btnDownloadResent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.createFileFolder();
-                final String path = model.getPath();
-                final File file = new File(path);
-                File destFile = new File(saveFilePath);
-
-                try {
-                    FileUtils.copyFileToDirectory(file , destFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Toast.makeText(context, "Saved To :"+saveFilePath, Toast.LENGTH_SHORT).show();
+                Utils.copyFile(model , context);
             }
         });
 

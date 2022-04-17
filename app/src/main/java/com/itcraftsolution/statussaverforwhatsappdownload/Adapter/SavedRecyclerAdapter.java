@@ -1,15 +1,19 @@
 package com.itcraftsolution.statussaverforwhatsappdownload.Adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.ImageDetailsFragment;
+import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.VideoDetailsFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
@@ -21,7 +25,6 @@ public class SavedRecyclerAdapter extends RecyclerView.Adapter<SavedRecyclerAdap
 
     Context context;
     ArrayList<Recents> list;
-    String saveFilePath = Utils.RootDirectorywhatsapp+"/";
 
 
     public SavedRecyclerAdapter(Context context, ArrayList<Recents> list) {
@@ -40,7 +43,39 @@ public class SavedRecyclerAdapter extends RecyclerView.Adapter<SavedRecyclerAdap
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         Recents model = list.get(position);
 
-        Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
+        if(model.getFilename().getName().endsWith(".mp4"))
+        {
+            holder.binding.igVideo.setVisibility(View.VISIBLE);
+            Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
+        }else {
+            holder.binding.igVideo.setVisibility(View.GONE);
+            Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences spf = context.getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
+                SharedPreferences.Editor edit = spf.edit();
+                edit.putString("URI", model.getUri().toString());
+                edit.apply();
+
+                if(model.getFilename().getName().endsWith(".mp4"))
+                {
+                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frMainContainer , new VideoDetailsFragment())
+                            .addToBackStack(null)
+                            .commit();
+                }else {
+                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.frMainContainer , new ImageDetailsFragment())
+                            .addToBackStack(null)
+                            .commit();
+                }
+            }
+        });
+
 
     }
 

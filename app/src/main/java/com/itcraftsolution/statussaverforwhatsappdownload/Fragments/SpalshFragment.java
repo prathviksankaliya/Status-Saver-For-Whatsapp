@@ -37,7 +37,7 @@ public class SpalshFragment extends Fragment {
                 fragmentTransaction.replace(R.id.frMainContainer , new HomeFragment());
                 fragmentTransaction.commit();
             }
-        }, 1200);
+        }, 1100);
         return binding.getRoot();
     }
 }

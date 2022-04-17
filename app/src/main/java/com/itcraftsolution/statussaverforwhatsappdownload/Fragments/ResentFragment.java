@@ -92,7 +92,7 @@ public class ResentFragment extends Fragment {
 
             if(Uri.fromFile(file).toString().endsWith(".png") || Uri.fromFile(file).toString().endsWith(".jpg") || Uri.fromFile(file).toString().endsWith(".mp4"))
             {
-                model = new Recents("whats "+i,allfiles[i].getAbsolutePath() , file.getName(), Uri.fromFile(file));
+                model = new Recents("whats "+i,allfiles[i].getAbsolutePath() , file, Uri.fromFile(file));
 
                 list.add(model);
             }

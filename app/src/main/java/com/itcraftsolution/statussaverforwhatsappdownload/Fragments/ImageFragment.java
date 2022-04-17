@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ImageRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ResentDownloadAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
+import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentImageBinding;
 
 import java.io.File;
@@ -38,47 +39,38 @@ public class ImageFragment extends Fragment {
 
         list = new ArrayList<>();
 
-        File STATUS_DIRECTORY = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "WhatsApp/Media/.Statuses");
+        if (Utils.STATUS_DIRECTORY.exists()) {
 
-        File STATUS_DIRECTORY_NEW = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "Android/media/com.whatsapp/WhatsApp/Media/.Statuses");
-
-        File STATUS_DIRECTORY_GBWHATSAPP = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "/GBWhatsapp/Media/.statuses");
-
-        if (STATUS_DIRECTORY.exists()) {
-
-            getData(STATUS_DIRECTORY);
+            getData(Utils.STATUS_DIRECTORY);
             binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
                     list = new ArrayList<>();
-                    getData(STATUS_DIRECTORY);
+                    getData(Utils.STATUS_DIRECTORY);
                     binding.imageRefershView.setRefreshing(false);
                 }
             });
 
-        } else if (STATUS_DIRECTORY_NEW.exists()) {
+        } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
 
-            getData(STATUS_DIRECTORY_NEW);
+            getData(Utils.STATUS_DIRECTORY_NEW);
             binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
                     list = new ArrayList<>();
-                    getData(STATUS_DIRECTORY_NEW);
+                    getData(Utils.STATUS_DIRECTORY_NEW);
                     binding.imageRefershView.setRefreshing(false);
                 }
             });
 
-        } else if (STATUS_DIRECTORY_GBWHATSAPP.exists()) {
+        } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
 
-            getData(STATUS_DIRECTORY_GBWHATSAPP);
+            getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
             binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
                     list = new ArrayList<>();
-                    getData(STATUS_DIRECTORY_GBWHATSAPP);
+                    getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
                     binding.imageRefershView.setRefreshing(false);
                 }
             });
@@ -103,18 +95,8 @@ public class ImageFragment extends Fragment {
 
         Recents model;
 
-//        String targetpath = Environment.getExternalStorageDirectory().getAbsolutePath()+
-//                "/Whatsapp/Media/.statuses";
-//        String targetpath = Environment.getExternalStorageDirectory().getAbsolutePath()+
-//                "/GBWhatsapp/Media/.statuses";
-
         File[] allfiles = file.listFiles();
 
-
-//        String targetpathBusiness = Environment.getExternalStorageDirectory().getAbsolutePath()+
-//                "/Whatsapp Business/Media/.statuses";
-//        File targetDicretryBusiness = new File(targetpathBusiness);
-//        File[] allfilesBusiness = targetDicretryBusiness.listFiles();
 
         Arrays.sort(allfiles, ((o1, o2) -> {
             if (o1.lastModified() > o2.lastModified()) {
@@ -130,37 +112,11 @@ public class ImageFragment extends Fragment {
             File singlefile = allfiles[i];
 
             if (Uri.fromFile(singlefile).toString().endsWith(".png") || Uri.fromFile(singlefile).toString().endsWith(".jpg")) {
-                model = new Recents("whats " + i, allfiles[i].getAbsolutePath(), singlefile.getName(), Uri.fromFile(singlefile));
+                model = new Recents("whats " + i, allfiles[i].getAbsolutePath(), singlefile, Uri.fromFile(singlefile));
 
                 list.add(model);
             }
         }
 
-//
-//        Arrays.sort(allfilesBusiness ,((o1, o2) ->{
-//            if(o1.lastModified() > o2.lastModified())
-//            {
-//                return -1;
-//            }
-//            else if(o1.lastModified() < o2.lastModified())
-//            {
-//                return +1;
-//            }
-//            else {
-//                return 0;
-//            }
-//        }));
-//
-//        for(int i = 0 ; i < allfilesBusiness.length; i++)
-//        {
-//            File file = allfilesBusiness[i] ;
-//
-//            if(Uri.fromFile(file).toString().endsWith(".png") || Uri.fromFile(file).toString().endsWith(".jpg") || Uri.fromFile(file).toString().endsWith(".mp4"))
-//            {
-//                model = new Recents("whatsBusiness "+i,allfilesBusiness[i].getAbsolutePath() , file.getName(), Uri.fromFile(file));
-//
-//                list.add(model);
-//            }
-//        }
     }
 }
