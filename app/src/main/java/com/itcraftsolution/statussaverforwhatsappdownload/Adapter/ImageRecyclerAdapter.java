@@ -60,6 +60,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
                 SharedPreferences spf = context.getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
                 SharedPreferences.Editor edit = spf.edit();
                 edit.putString("URI", model.getUri().toString());
+                edit.putString("FILE_PATH", model.getFilename().getAbsolutePath());
                 edit.apply();
 
                 ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()

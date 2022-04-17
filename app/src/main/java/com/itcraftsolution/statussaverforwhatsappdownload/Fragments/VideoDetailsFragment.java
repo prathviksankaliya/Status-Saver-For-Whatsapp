@@ -1,6 +1,7 @@
 package com.itcraftsolution.statussaverforwhatsappdownload.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.session.MediaController;
@@ -9,12 +10,14 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
-import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentVideoBinding;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentVideoDetailsBinding;
 
 
@@ -25,7 +28,11 @@ public class VideoDetailsFragment extends Fragment {
     }
 
     private FragmentVideoDetailsBinding binding;
-    private String VideoUri;
+    private String VideoUri, filepath;
+    private Animation fabOpen, fabClose, rotateForward, rotatebackward;
+    private int DURATION = 300;
+    private boolean isOpen = false;
+    private Uri uri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,9 +41,38 @@ public class VideoDetailsFragment extends Fragment {
 
         binding = FragmentVideoDetailsBinding.inflate(getLayoutInflater());
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         LoadData();
 
+        fabOpen = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close);
+        rotateForward = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_forward);
+        rotatebackward = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_backward);
 
+        rotateForward.setDuration(DURATION);
+        rotatebackward.setDuration(DURATION);
+        fabOpen.setDuration(DURATION);
+        fabClose.setDuration(DURATION);
+
+        binding.fabMainDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateFab();
+            }
+        });
+
+        binding.fabDetailsShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("image/mp4");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "Check Out This Whatsapp Status From @StatusSaverForWhatsapp #Statues #StatusSaver");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + filepath));
+                startActivity(Intent.createChooser(shareIntent, "Share Video"));
+            }
+        });
         return binding.getRoot();
     }
 
@@ -44,7 +80,8 @@ public class VideoDetailsFragment extends Fragment {
     {
         SharedPreferences spf = requireContext().getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
         VideoUri = spf.getString("URI" , null);
-        Uri uri = Uri.parse(VideoUri);
+        filepath = spf.getString("FILE_PATH" , null);
+        uri = Uri.parse(VideoUri);
 
         binding.VideoView.setVideoURI(uri);
         binding.VideoView.start();
@@ -56,5 +93,28 @@ public class VideoDetailsFragment extends Fragment {
                 mp.setLooping(true);
             }
         });
+    }
+
+
+    private void animateFab() {
+        if (isOpen) {
+            binding.fabMainDetails.startAnimation(rotateForward);
+            binding.fabDetailsShare.startAnimation(fabClose);
+            binding.fabDetailsDownload.startAnimation(fabClose);
+
+            binding.fabDetailsShare.setClickable(false);
+            binding.fabDetailsDownload.setClickable(false);
+
+            isOpen = false;
+        } else {
+            binding.fabMainDetails.startAnimation(rotatebackward);
+            binding.fabDetailsShare.startAnimation(fabOpen);
+            binding.fabDetailsDownload.startAnimation(fabOpen);
+
+            binding.fabDetailsShare.setClickable(true);
+            binding.fabDetailsDownload.setClickable(true);
+
+            isOpen = true;
+        }
     }
 }

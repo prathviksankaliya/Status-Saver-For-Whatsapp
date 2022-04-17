@@ -12,4 +12,7 @@
 
 
     <color name="green">#66d15f</color>
+    <color name="lightgrey">#CFD8DC</color>
+    <color name="lightblack">#B4000000</color>
+    <color name="liteblack">#17000000</color>
 </resources>

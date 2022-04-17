@@ -79,7 +79,6 @@ public class Utils {
         File destFile = new File(file + File.separator + fileName);
 
         try {
-
             org.apache.commons.io.FileUtils.copyFile(status.getFilename(), destFile);
             destFile.setLastModified(System.currentTimeMillis());
             new SingleMediaScanner(context, file);
@@ -125,7 +124,7 @@ public class Utils {
         assert notificationManager != null;
         notificationManager.notify(new Random().nextInt(), notification.build());
 
-        Toast.makeText( context,"Saved to " + APP_DIR, Toast.LENGTH_LONG).show();
+        Toast.makeText( context,"Saved to Gallery", Toast.LENGTH_LONG).show();
 
     }
 

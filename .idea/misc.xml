@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable-v24/ic_baseline_arrow_circle_down_24.xml" value="0.18" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_arrow_circle_down_24.xml" value="0.1795" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_grain_24.xml" value="0.1795" />
+        <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.18" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/fragment_details_sacreen.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/fragment_home.xml" value="0.27447916666666666" />

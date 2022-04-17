@@ -59,6 +59,7 @@ public class SavedRecyclerAdapter extends RecyclerView.Adapter<SavedRecyclerAdap
                 SharedPreferences spf = context.getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
                 SharedPreferences.Editor edit = spf.edit();
                 edit.putString("URI", model.getUri().toString());
+                edit.putString("FILE_PATH", model.getFilename().getAbsolutePath());
                 edit.apply();
 
                 if(model.getFilename().getName().endsWith(".mp4"))
