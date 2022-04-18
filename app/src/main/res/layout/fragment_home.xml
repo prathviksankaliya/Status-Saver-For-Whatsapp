@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.HomeFragment">
 
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabHomeLayout"
         android:layout_width="match_parent"
@@ -17,8 +16,8 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorColor="@color/black"
-        app:tabSelectedTextColor="@color/black">
+        app:tabIndicatorColor="@color/green"
+        app:tabSelectedTextColor="@color/white">
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -42,8 +41,8 @@
             android:padding="8dp"
             android:gravity="center"
             android:textSize="12sp"
-            android:background="#03000000"
-            android:textColor="#43000000"
+            android:background="#11000000"
+            android:textColor="@color/font_color"
             android:text="The Status file will be Deleted 24 hours after published. \n Please Download and watch on Saved Page."
             />
     </androidx.cardview.widget.CardView>
@@ -58,4 +57,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

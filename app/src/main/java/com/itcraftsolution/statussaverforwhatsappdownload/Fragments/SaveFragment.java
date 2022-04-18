@@ -45,7 +45,7 @@ public class SaveFragment extends Fragment {
         list = new ArrayList<>();
 
         File STATUS_DIRECTORY = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "StatusSaver/");
+                File.separator + "StatusSaverForWhatsapp/");
 
 
         if (STATUS_DIRECTORY.exists()) {
@@ -53,7 +53,7 @@ public class SaveFragment extends Fragment {
             getData(STATUS_DIRECTORY);
             adapter = new SavedRecyclerAdapter(requireContext(), list);
             binding.rvSaved.setAdapter(adapter);
-            binding.rvSaved.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+            binding.rvSaved.setLayoutManager(new GridLayoutManager(requireContext(), 3));
 
             binding.savedRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -66,7 +66,9 @@ public class SaveFragment extends Fragment {
             });
 
         }  else {
-
+            binding.savedRefershView.setRefreshing(false);
+            binding.rvSaved.setVisibility(View.GONE);
+            binding.llNotFound.setVisibility(View.VISIBLE);
             Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
         }
 

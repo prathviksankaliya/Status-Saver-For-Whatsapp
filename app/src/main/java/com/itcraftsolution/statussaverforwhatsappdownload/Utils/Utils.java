@@ -32,7 +32,7 @@ public class Utils {
 
     private static final String CHANNEL_NAME = "IT_CRAFT_SOLUTION";
     private static String APP_DIR = Environment.getExternalStorageDirectory().getPath() +
-    File.separator + "StatusSaver";
+    File.separator + "StatusSaverForWhatsapp";
 
 
    public static File STATUS_DIRECTORY = new File(Environment.getExternalStorageDirectory() +
@@ -45,7 +45,7 @@ public class Utils {
             File.separator + "/GBWhatsapp/Media/.statuses");
 
     public static File RootDirectorywhatsapp =
-            new File(Environment.getExternalStorageDirectory()+ "/StatusSaver");
+            new File(Environment.getExternalStorageDirectory()+ "/StatusSaverForWhatsapp");
 
     public static void createFileFolder()
     {

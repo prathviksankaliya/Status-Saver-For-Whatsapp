@@ -81,7 +81,9 @@ public class VideoFragment extends Fragment {
                 }
             });
         } else {
-
+            binding.refreshVideo.setRefreshing(false);
+            binding.rvVideo.setVisibility(View.GONE);
+            binding.llNotFound.setVisibility(View.VISIBLE);
             Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
         }
 

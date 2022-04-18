@@ -17,8 +17,12 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
+import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentVideoDetailsBinding;
+
+import java.io.File;
 
 
 public class VideoDetailsFragment extends Fragment {
@@ -71,6 +75,14 @@ public class VideoDetailsFragment extends Fragment {
                 shareIntent.putExtra(Intent.EXTRA_TEXT, "Check Out This Whatsapp Status From @StatusSaverForWhatsapp #Statues #StatusSaver");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + filepath));
                 startActivity(Intent.createChooser(shareIntent, "Share Video"));
+            }
+        });
+        binding.fabDetailsDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File file = new File(filepath);
+                Recents status = new Recents(file.getName() , filepath , file , uri);
+                Utils.copyFile(status , requireContext());
             }
         });
         return binding.getRoot();
