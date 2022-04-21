@@ -4,18 +4,15 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
-import android.view.Menu;
+import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -25,19 +22,24 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.SpalshFragment;
+import com.google.android.material.navigation.NavigationView;
+import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.HomeFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> getPermission;
     private ActivityMainBinding binding;
+    private Toolbar toolbar;
+
+
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +47,49 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frMainContainer , new SpalshFragment());
-        fragmentTransaction.commit();
+        toolbar = findViewById(R.id.toolbar);
+
+        toolbar.setTitle("Status Saver for Whatsapp");
+        setSupportActionBar(toolbar);
+
+        savedStatus();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout, toolbar , R.string.OpenDrawer , R.string.CloseDrawer);
+        binding.drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        binding.navView.setItemIconTintList(null);
+        binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId())
+                {
+                    case R.id.menuHowUse:
+                                    howToUse();
+                                    break;
+                    case R.id.menuFeedback:
+                                    feedback();
+                                    break;
+                    case R.id.menuPrivacy:
+                                    privacyPolicy();
+                                    break;
+                    case R.id.menuRateus:
+                                    rateUs();
+                                    break;
+                    case R.id.menuShare:
+                                    shareApp();
+                                    break;
+                    default:
+                            savedStatus();
+
+                }
+                binding.drawerLayout.closeDrawer(Gravity.LEFT);
+
+                return true;
+
+            }
+        });
 
         if (!checkPermission()){
             showPermissionDialog();
@@ -132,4 +174,53 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void shareApp()
+    {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT,
+                "Hey check out Status Saver app for Whatsapp at: https://play.google.com/store/apps/details?id=com.itcraftsolution.statussaverforwhatsappdownload" );
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
+    private void rateUs()
+    {
+        Toast.makeText(this, "Rating", Toast.LENGTH_SHORT).show();
+    }
+
+    private void privacyPolicy()
+    {
+        Toast.makeText(this, "Rating", Toast.LENGTH_SHORT).show();
+    }
+
+    private void feedback()
+    {
+        Toast.makeText(this, "feed back", Toast.LENGTH_SHORT).show();
+    }
+
+    private void howToUse()
+    {
+        Toast.makeText(this, "how to use", Toast.LENGTH_SHORT).show();
+    }
+
+    private void savedStatus()
+    {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.frMainContainer , new HomeFragment());
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(binding.drawerLayout.isDrawerOpen(Gravity.LEFT))
+        {
+            binding.drawerLayout.closeDrawer(Gravity.LEFT);
+        }
+        else {
+            super.onBackPressed();
+        }
+
+    }
 }

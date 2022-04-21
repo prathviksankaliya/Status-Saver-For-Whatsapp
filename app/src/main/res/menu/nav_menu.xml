@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menuSaved"
+        android:title="Saved statuses"
+        android:icon="@drawable/saved"
+        android:menuCategory="secondary"
+        />
+
+    <item
+        android:id="@+id/menuHowUse"
+        android:title="How to use"
+        android:icon="@drawable/howtouse"
+        android:menuCategory="secondary"
+        />
+
+    <item
+        android:id="@+id/menuFeedback"
+        android:title="Feedback"
+        android:icon="@drawable/feedback"
+        android:menuCategory="secondary"
+        />
+
+    <item
+        android:id="@+id/menuPrivacy"
+        android:title="Privacy policy"
+        android:icon="@drawable/privacy"
+        android:menuCategory="secondary"
+        />
+
+    <item
+        android:id="@+id/menuRateus"
+        android:title="Rate us"
+        android:icon="@drawable/rating"
+        android:menuCategory="secondary"
+        />
+
+    <item
+        android:id="@+id/menuShare"
+        android:title="Share app"
+        android:icon="@drawable/share"
+        android:menuCategory="secondary"
+        />
+</menu>
