@@ -4,6 +4,7 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -30,7 +31,14 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnCompleteListener;
+import com.google.android.play.core.tasks.OnSuccessListener;
+import com.google.android.play.core.tasks.Task;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.HomeFragment;
+import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.SaveFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> getPermission;
     private ActivityMainBinding binding;
     private Toolbar toolbar;
+    private ReviewInfo info ;
+    private ReviewManager manager;
 
 
     @RequiresApi(api = Build.VERSION_CODES.R)
@@ -52,7 +62,12 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Status Saver for Whatsapp");
         setSupportActionBar(toolbar);
 
-        savedStatus();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+//        activeReviewInfo();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout, toolbar , R.string.OpenDrawer , R.string.CloseDrawer);
         binding.drawerLayout.addDrawerListener(toggle);
@@ -65,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getItemId())
                 {
+                    case R.id.menuSaved:
+                                    savedStatus();
+                                    break;
                     case R.id.menuHowUse:
                                     howToUse();
                                     break;
@@ -80,9 +98,6 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.menuShare:
                                     shareApp();
                                     break;
-                    default:
-                            savedStatus();
-
                 }
                 binding.drawerLayout.closeDrawer(Gravity.LEFT);
 
@@ -179,16 +194,58 @@ public class MainActivity extends AppCompatActivity {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT,
-                "Hey check out Status Saver app for Whatsapp at: https://play.google.com/store/apps/details?id=com.itcraftsolution.statussaverforwhatsappdownload" );
+                "Hey check out Status Saver app for Whatsapp at: https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint" );
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
 
     private void rateUs()
     {
-        Toast.makeText(this, "Rating", Toast.LENGTH_SHORT).show();
+
+        Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint" );
+//        + MainActivity.this.getPackageName()
+        Intent intent = new Intent(Intent.ACTION_VIEW , uri);
+        try{
+            startActivity(intent);
+        }catch(Exception e)
+        {
+            Toast.makeText(this, "Unable to open "+ e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+
+//        2nd approach  in - app rating Review
+
+//        if(info != null)
+//        {
+//            Task<Void> flow = manager.launchReviewFlow(MainActivity.this , info);
+//            flow.addOnCompleteListener(new OnCompleteListener<Void>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Void> task) {
+//                    Toast.makeText(MainActivity.this, "Rating Is Done", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+
     }
 
+    private void activeReviewInfo()
+    {
+        manager = ReviewManagerFactory.create(MainActivity.this);
+        Task<ReviewInfo> manageInfoTask =  manager.requestReviewFlow();
+        manageInfoTask.addOnCompleteListener(new OnCompleteListener<ReviewInfo>() {
+            @Override
+            public void onComplete(@NonNull Task<ReviewInfo> task) {
+                if(task.isSuccessful())
+                {
+                    info = task.getResult();
+
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "Failed ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
     private void privacyPolicy()
     {
         Toast.makeText(this, "Rating", Toast.LENGTH_SHORT).show();
@@ -196,7 +253,16 @@ public class MainActivity extends AppCompatActivity {
 
     private void feedback()
     {
-        Toast.makeText(this, "feed back", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.putExtra(Intent.EXTRA_SUBJECT , "FeedBack of Status saver for Whatsapp");
+        intent.setData(Uri.parse("mailto:itcraftsolution1@gmail.com"));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+                startActivity(intent);
+        }catch (ActivityNotFoundException e)
+        {
+            Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void howToUse()
@@ -207,7 +273,8 @@ public class MainActivity extends AppCompatActivity {
     private void savedStatus()
     {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frMainContainer , new HomeFragment());
+        fragmentTransaction.replace(R.id.frMainContainer , new SaveFragment());
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 

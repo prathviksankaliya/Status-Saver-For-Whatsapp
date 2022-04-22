@@ -50,11 +50,13 @@ dependencies {
     // common io library support
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 
-
     //glide library for images
     implementation 'com.github.bumptech.glide:glide:4.13.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 
     // Zoom Images
     implementation 'com.jsibbold:zoomage:1.3.1'
+
+    // Play Store In - app Review
+    implementation 'com.google.android.play:core:1.10.3'
 }

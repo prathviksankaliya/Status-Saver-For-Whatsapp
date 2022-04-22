@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Environment;
@@ -89,7 +91,7 @@ public class VideoFragment extends Fragment {
 
         adapter = new VideoRecyclerAdapter(requireContext(), list);
         binding.rvVideo.setAdapter(adapter);
-        binding.rvVideo.setLayoutManager(new GridLayoutManager(requireContext(), 3));
+        binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
 
         return binding.getRoot();
     }

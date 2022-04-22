@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Environment;
@@ -101,8 +103,7 @@ public class ImageFragment extends Fragment {
 
         adapter = new ImageRecyclerAdapter(requireContext(), list);
         binding.rvImage.setAdapter(adapter);
-        binding.rvImage.setLayoutManager(new GridLayoutManager(requireContext(), 3));
-
+        binding.rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
         dialog.dismiss();
         return binding.getRoot();
     }
