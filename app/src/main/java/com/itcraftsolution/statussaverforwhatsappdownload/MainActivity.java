@@ -7,6 +7,7 @@ import static android.os.Build.VERSION.SDK_INT;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,8 +36,9 @@ import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
-import com.google.android.play.core.tasks.OnSuccessListener;
 import com.google.android.play.core.tasks.Task;
+import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog;
+import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog_Privacy;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.HomeFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.SaveFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityMainBinding;
@@ -64,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
 //        activeReviewInfo();
@@ -248,7 +249,10 @@ public class MainActivity extends AppCompatActivity {
     }
     private void privacyPolicy()
     {
-        Toast.makeText(this, "Rating", Toast.LENGTH_SHORT).show();
+        Custom_Dialog_Privacy dialog = new Custom_Dialog_Privacy(MainActivity.this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
     private void feedback()
@@ -267,7 +271,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void howToUse()
     {
-        Toast.makeText(this, "how to use", Toast.LENGTH_SHORT).show();
+        Custom_Dialog dialog = new Custom_Dialog(MainActivity.this);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
     private void savedStatus()
@@ -287,7 +294,24 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             super.onBackPressed();
+
         }
+//        new AlertDialog.Builder(MainActivity.this)
+//                .setTitle("Exit App")
+//                .setCancelable(false)
+//                .setMessage("Are You want to Sure Exit The App ?")
+//                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        MainActivity.super.onBackPressed();
+//                    }
+//                })
+//                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                }).show();
 
     }
 }

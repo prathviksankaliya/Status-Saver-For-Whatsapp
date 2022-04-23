@@ -16,4 +16,7 @@
     <color name="lightgrey">#11000000</color>
     <color name="lightblack">#B4000000</color>
     <color name="liteblack">#17000000</color>
+
+    <color name="dialog_1">#FDD736</color>
+    <color name="dialog_2">#3B5796</color>
 </resources>
