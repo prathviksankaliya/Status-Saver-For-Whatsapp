@@ -13,6 +13,7 @@
 
     <color name="green">#66d15f</color>
     <color name="font_color">#5D5F60</color>
+    <color name="darkgrey">#685D5F60</color>
     <color name="lightgrey">#11000000</color>
     <color name="lightblack">#B4000000</color>
     <color name="liteblack">#17000000</color>

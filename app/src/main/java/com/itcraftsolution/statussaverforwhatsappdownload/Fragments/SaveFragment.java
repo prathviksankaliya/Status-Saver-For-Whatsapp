@@ -1,6 +1,7 @@
 
 package com.itcraftsolution.statussaverforwhatsappdownload.Fragments;
 
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -16,6 +17,9 @@ import android.widget.Toast;
 
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ResentDownloadAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.SavedRecyclerAdapter;
+import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog;
+import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog_Privacy;
+import com.itcraftsolution.statussaverforwhatsappdownload.MainActivity;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentImageBinding;
@@ -68,8 +72,17 @@ public class SaveFragment extends Fragment {
         }  else {
             binding.savedRefershView.setRefreshing(false);
             binding.rvSaved.setVisibility(View.GONE);
-            binding.llNotFound.setVisibility(View.VISIBLE);
+
             Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+        }
+
+        if(list.isEmpty())
+        {
+            binding.rvSaved.setVisibility(View.GONE);
+            Custom_Dialog dialog = new Custom_Dialog(requireContext());
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+            dialog.setCancelable(false);
+            dialog.show();
         }
 
         return binding.getRoot();

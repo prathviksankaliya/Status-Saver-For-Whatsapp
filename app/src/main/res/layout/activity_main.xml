@@ -13,6 +13,7 @@
        android:layout_height="match_parent"
       layout="@layout/toolbar"
       />
+
    <com.google.android.material.navigation.NavigationView
        android:id="@+id/navView"
        android:layout_width="wrap_content"
@@ -20,7 +21,13 @@
        android:layout_gravity="start"
        app:headerLayout="@layout/headerlayout"
        app:menu="@menu/nav_menu"
+      />
 
+   <include
+      android:id="@+id/storagePermission"
+      layout="@layout/storage_dialog"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
       />
 
 

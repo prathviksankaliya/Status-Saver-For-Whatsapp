@@ -5,7 +5,9 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -15,6 +17,8 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -39,13 +43,13 @@ import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.Task;
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog;
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog_Privacy;
+import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Permission;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.HomeFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.SaveFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityResultLauncher<Intent> getPermission;
     private ActivityMainBinding binding;
     private Toolbar toolbar;
     private ReviewInfo info ;
@@ -64,9 +68,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Status Saver for Whatsapp");
         setSupportActionBar(toolbar);
 
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
-        fragmentTransaction.commit();
+
 
 //        activeReviewInfo();
 
@@ -110,17 +112,24 @@ public class MainActivity extends AppCompatActivity {
         if (!checkPermission()){
             showPermissionDialog();
         }
+        else {
+            binding.storagePermission.getRoot().setVisibility(View.GONE);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
+            fragmentTransaction.commit();
+        }
 
-        getPermission = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onActivityResult(ActivityResult result) {
-                if(result.getResultCode() == MainActivity.RESULT_OK)
-                {
-                    Toast.makeText(MainActivity.this, "Permission Given in Android 11", Toast.LENGTH_SHORT).show();
-                }
+            public void onClick(View v) {
+
+                binding.storagePermission.getRoot().setVisibility(View.GONE);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
+                fragmentTransaction.commit();
+
             }
         });
-
     }
 
     private void showPermissionDialog() {

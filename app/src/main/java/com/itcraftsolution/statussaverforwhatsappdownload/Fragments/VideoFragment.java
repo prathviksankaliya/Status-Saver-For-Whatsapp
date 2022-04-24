@@ -84,15 +84,19 @@ public class VideoFragment extends Fragment {
             });
         } else {
             binding.refreshVideo.setRefreshing(false);
-            binding.rvVideo.setVisibility(View.GONE);
-            binding.llNotFound.setVisibility(View.VISIBLE);
             Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
         }
 
-        adapter = new VideoRecyclerAdapter(requireContext(), list);
-        binding.rvVideo.setAdapter(adapter);
-        binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
-
+        if(list.isEmpty())
+        {
+            binding.rvVideo.setVisibility(View.GONE);
+            binding.VNotFoundImage.setVisibility(View.VISIBLE);
+        }
+        else {
+            adapter = new VideoRecyclerAdapter(requireContext(), list);
+            binding.rvVideo.setAdapter(adapter);
+            binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
+        }
         return binding.getRoot();
     }
 
