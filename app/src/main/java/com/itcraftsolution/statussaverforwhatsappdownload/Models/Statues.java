@@ -4,14 +4,14 @@ import android.net.Uri;
 
 import java.io.File;
 
-public class Recents {
+public class Statues {
 
     private String name , path ;
     private Uri uri;
     private File filename;
 
 
-    public Recents(String name, String path, File filename, Uri uri) {
+    public Statues(String name, String path, File filename, Uri uri) {
         this.name = name;
         this.path = path;
         this.filename = filename;

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
-import android.media.session.MediaController;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -17,7 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
+import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentVideoDetailsBinding;
@@ -81,7 +80,7 @@ public class VideoDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 File file = new File(filepath);
-                Recents status = new Recents(file.getName() , filepath , file , uri);
+                Statues status = new Statues(file.getName() , filepath , file , uri);
                 Utils.copyFile(status , requireContext());
             }
         });

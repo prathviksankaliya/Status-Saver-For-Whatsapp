@@ -15,14 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ResentDownloadAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.SavedRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog;
-import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog_Privacy;
-import com.itcraftsolution.statussaverforwhatsappdownload.MainActivity;
-import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
-import com.itcraftsolution.statussaverforwhatsappdownload.R;
-import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentImageBinding;
+import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentSaveBinding;
 
 import java.io.File;
@@ -37,7 +32,7 @@ public class SaveFragment extends Fragment {
     }
 
     private FragmentSaveBinding binding;
-    private ArrayList<Recents> list;
+    private ArrayList<Statues> list;
     private SavedRecyclerAdapter adapter;
 
     @Override
@@ -72,7 +67,6 @@ public class SaveFragment extends Fragment {
         }  else {
             binding.savedRefershView.setRefreshing(false);
             binding.rvSaved.setVisibility(View.GONE);
-
             Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
         }
 
@@ -91,7 +85,7 @@ public class SaveFragment extends Fragment {
 
     private void getData(File file) {
 
-        Recents model;
+        Statues model;
 
         File[] allfiles = file.listFiles();
 
@@ -109,7 +103,7 @@ public class SaveFragment extends Fragment {
             File singlefile = allfiles[i];
 
             if (Uri.fromFile(singlefile).toString().endsWith(".png") || Uri.fromFile(singlefile).toString().endsWith(".jpg") || Uri.fromFile(singlefile).toString().endsWith(".mp4")) {
-                model = new Recents("whats " + i, allfiles[i].getAbsolutePath(), singlefile, Uri.fromFile(singlefile));
+                model = new Statues("whats " + i, allfiles[i].getAbsolutePath(), singlefile, Uri.fromFile(singlefile));
 
                 list.add(model);
             }

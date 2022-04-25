@@ -15,6 +15,13 @@
     3. Come back again to Status
         saver app.</string>
 
+    <string name="Permission_Steps">Steps :\n
+    1. Click on Allow Storage permission.\n
+    2. Find to Status Saver for Whatsapp.\n
+    3. Allow To Manage Storage Files.\n
+    4. Come back again to app.
+        </string>
+
     <string name="privacy_policy">IT CRAFT SOLUTION built the Status Saver For Whatsapp Download app as a Free app. This SERVICE is provided by IT CRAFT SOLUTION at no cost and is intended for use as is.
 
 This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.

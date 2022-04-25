@@ -5,34 +5,28 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.ImageDetailsFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.VideoDetailsFragment;
-import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
+import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.SampleResentBinding;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdapter.viewHolder> {
 
 
     Context context;
-    ArrayList<Recents> list;
+    ArrayList<Statues> list;
     String saveFilePath = Utils.RootDirectorywhatsapp+"/";
 
-    public VideoRecyclerAdapter(Context context, ArrayList<Recents> list) {
+    public VideoRecyclerAdapter(Context context, ArrayList<Statues> list) {
         this.context = context;
         this.list = list;
     }
@@ -46,7 +40,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-        Recents model = list.get(position);
+        Statues model = list.get(position);
 
         Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
         holder.binding.igVideo.setVisibility(View.VISIBLE);

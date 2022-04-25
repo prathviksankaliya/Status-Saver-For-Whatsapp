@@ -10,15 +10,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.FileProvider;
 
-import com.google.android.material.snackbar.Snackbar;
-import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
+import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
 
 import java.io.File;
@@ -56,7 +54,7 @@ public class Utils {
     }
 
 
-    public static void copyFile(Recents status, Context context) {
+    public static void copyFile(Statues status, Context context) {
 
         File file = new File(APP_DIR);
         if (!file.exists()) {
@@ -90,7 +88,7 @@ public class Utils {
 
     }
 
-    private static void showNotification(Context context,  File destFile, Recents status) {
+    private static void showNotification(Context context,  File destFile, Statues status) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             makeNotificationChannel(context);

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -14,9 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.ImageDetailsFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.VideoDetailsFragment;
-import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
+import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
-import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.SampleSavedBinding;
 
 import java.util.ArrayList;
@@ -24,10 +22,10 @@ import java.util.ArrayList;
 public class SavedRecyclerAdapter extends RecyclerView.Adapter<SavedRecyclerAdapter.viewHolder> {
 
     Context context;
-    ArrayList<Recents> list;
+    ArrayList<Statues> list;
 
 
-    public SavedRecyclerAdapter(Context context, ArrayList<Recents> list) {
+    public SavedRecyclerAdapter(Context context, ArrayList<Statues> list) {
         this.context = context;
         this.list = list;
     }
@@ -41,7 +39,7 @@ public class SavedRecyclerAdapter extends RecyclerView.Adapter<SavedRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-        Recents model = list.get(position);
+        Statues model = list.get(position);
 
         if(model.getFilename().getName().endsWith(".mp4"))
         {

@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ReviewInfo info ;
     private ReviewManager manager;
+    private boolean isGranted = false;
 
 
     @RequiresApi(api = Build.VERSION_CODES.R)
@@ -67,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar.setTitle("Status Saver for Whatsapp");
         setSupportActionBar(toolbar);
-
-
 
 //        activeReviewInfo();
 
@@ -109,25 +108,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (!checkPermission()){
-            showPermissionDialog();
-        }
-        else {
+        if(isGranted)
+        {
             binding.storagePermission.getRoot().setVisibility(View.GONE);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
             fragmentTransaction.commit();
         }
 
+
         binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                binding.storagePermission.getRoot().setVisibility(View.GONE);
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
-                fragmentTransaction.commit();
-
+                showPermissionDialog();
             }
         });
     }
@@ -166,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @org.jetbrains.annotations.NotNull String[] permissions, @NonNull @org.jetbrains.annotations.NotNull int[] grantResults) {
@@ -321,6 +313,24 @@ public class MainActivity extends AppCompatActivity {
 //
 //                    }
 //                }).show();
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.R)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(checkPermission())
+        {
+            isGranted = true;
+            Toast.makeText(this, "Is Granted Storage Permission", Toast.LENGTH_SHORT).show();
+            binding.storagePermission.getRoot().setVisibility(View.GONE);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
+            fragmentTransaction.commit();
+        }else {
+            Toast.makeText(this, "Please Allow Storage Permission", Toast.LENGTH_SHORT).show();
+        }
 
     }
 }

@@ -4,22 +4,17 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ImageRecyclerAdapter;
-import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ResentDownloadAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.VideoRecyclerAdapter;
-import com.itcraftsolution.statussaverforwhatsappdownload.Models.Recents;
-import com.itcraftsolution.statussaverforwhatsappdownload.R;
+import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentVideoBinding;
 
@@ -31,7 +26,7 @@ public class VideoFragment extends Fragment {
 
 
     private FragmentVideoBinding binding;
-    private ArrayList<Recents> list;
+    private ArrayList<Statues> list;
     private VideoRecyclerAdapter adapter;
 
     @Override
@@ -103,7 +98,7 @@ public class VideoFragment extends Fragment {
 
     private void getData(File file)
     {
-        Recents model ;
+        Statues model ;
 
         File[] allfiles = file.listFiles();
 
@@ -127,7 +122,7 @@ public class VideoFragment extends Fragment {
 
             if(Uri.fromFile(singlefile).toString().endsWith(".mp4")  )
             {
-                model = new Recents("whats "+i,allfiles[i].getAbsolutePath() , singlefile, Uri.fromFile(singlefile));
+                model = new Statues("whats "+i,allfiles[i].getAbsolutePath() , singlefile, Uri.fromFile(singlefile));
 
                 list.add(model);
             }
