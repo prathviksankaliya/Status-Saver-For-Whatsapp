@@ -58,6 +58,7 @@ public class SavedRecyclerAdapter extends RecyclerView.Adapter<SavedRecyclerAdap
                 SharedPreferences.Editor edit = spf.edit();
                 edit.putString("URI", model.getUri().toString());
                 edit.putString("FILE_PATH", model.getFilename().getAbsolutePath());
+                edit.putBoolean("isSaved" , true);
                 edit.apply();
 
                 if(model.getFilename().getName().endsWith(".mp4"))

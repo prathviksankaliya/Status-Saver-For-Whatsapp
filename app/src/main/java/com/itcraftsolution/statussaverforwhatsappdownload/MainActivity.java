@@ -115,8 +115,6 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
             fragmentTransaction.commit();
         }
-
-
         binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -323,7 +321,6 @@ public class MainActivity extends AppCompatActivity {
         if(checkPermission())
         {
             isGranted = true;
-            Toast.makeText(this, "Is Granted Storage Permission", Toast.LENGTH_SHORT).show();
             binding.storagePermission.getRoot().setVisibility(View.GONE);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());

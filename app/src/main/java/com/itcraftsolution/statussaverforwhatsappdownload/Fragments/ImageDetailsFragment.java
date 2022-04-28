@@ -30,6 +30,7 @@ public class ImageDetailsFragment extends Fragment {
     private Animation fabOpen, fabClose, rotateForward, rotatebackward;
     private int DURATION = 300;
     private boolean isOpen = false;
+    private boolean isSaved;
     private Uri uri;
 
 
@@ -89,6 +90,12 @@ public class ImageDetailsFragment extends Fragment {
         SharedPreferences spf = requireContext().getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
         ImageUri = spf.getString("URI" , null);
         filepath = spf.getString("FILE_PATH" , null);
+        isSaved = spf.getBoolean("isSaved" , false);
+
+        if(isSaved)
+        {
+            binding.fabDetailsDownload.setVisibility(View.GONE);
+        }
         uri = Uri.parse(ImageUri);
 
 //        binding.FullSizeImage.setImageURI(uri);

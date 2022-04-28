@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Environment;
@@ -52,7 +54,7 @@ public class SaveFragment extends Fragment {
             getData(STATUS_DIRECTORY);
             adapter = new SavedRecyclerAdapter(requireContext(), list);
             binding.rvSaved.setAdapter(adapter);
-            binding.rvSaved.setLayoutManager(new GridLayoutManager(requireContext(), 3));
+            binding.rvSaved.setLayoutManager(new StaggeredGridLayoutManager(2 , LinearLayoutManager.VERTICAL));
 
             binding.savedRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -77,6 +79,7 @@ public class SaveFragment extends Fragment {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
             dialog.setCancelable(false);
             dialog.show();
+            binding.VNotFoundImage.setVisibility(View.VISIBLE);
         }
 
         return binding.getRoot();

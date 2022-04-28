@@ -10,11 +10,13 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.MediaController;
 
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
@@ -35,6 +37,7 @@ public class VideoDetailsFragment extends Fragment {
     private Animation fabOpen, fabClose, rotateForward, rotatebackward;
     private int DURATION = 300;
     private boolean isOpen = false;
+    private boolean isSaved;
     private Uri uri;
 
     @Override
@@ -82,6 +85,7 @@ public class VideoDetailsFragment extends Fragment {
                 File file = new File(filepath);
                 Statues status = new Statues(file.getName() , filepath , file , uri);
                 Utils.copyFile(status , requireContext());
+
             }
         });
         return binding.getRoot();
@@ -92,9 +96,19 @@ public class VideoDetailsFragment extends Fragment {
         SharedPreferences spf = requireContext().getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
         VideoUri = spf.getString("URI" , null);
         filepath = spf.getString("FILE_PATH" , null);
+        isSaved = spf.getBoolean("isSaved" , false);
+
+        if(isSaved)
+        {
+            binding.fabDetailsDownload.setVisibility(View.GONE);
+        }
         uri = Uri.parse(VideoUri);
 
         binding.VideoView.setVideoURI(uri);
+        MediaController mediaController = new MediaController(requireContext());
+        mediaController.setAnchorView(binding.VideoView);
+        mediaController.setMediaPlayer(binding.VideoView);
+        binding.VideoView.setMediaController(mediaController);
         binding.VideoView.start();
         binding.VideoView.requestFocus();
 
