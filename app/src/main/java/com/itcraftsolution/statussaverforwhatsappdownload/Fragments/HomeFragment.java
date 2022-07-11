@@ -16,8 +16,8 @@ import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentHo
 
 public class HomeFragment extends Fragment {
 
-    private HomeTabVIewPagerAdapter adapter;
     private FragmentHomeBinding binding;
+    private HomeTabVIewPagerAdapter adapter;
     private String [] tabTitles = new String[]{"IMAGES" , "VIDEOS","SAVED"};
 
     public HomeFragment() {

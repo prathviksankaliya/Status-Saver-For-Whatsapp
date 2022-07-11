@@ -1,20 +1,41 @@
 package com.itcraftsolution.statussaverforwhatsappdownload.Fragments;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Environment;
+import android.os.storage.StorageManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ImageRecyclerAdapter;
+import com.itcraftsolution.statussaverforwhatsappdownload.MainActivity;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentImageBinding;
@@ -30,8 +51,10 @@ public class ImageFragment extends Fragment {
     private ArrayList<Statues> list;
     private ImageRecyclerAdapter adapter;
     private ProgressDialog dialog;
+     ActivityResultLauncher<Intent> launcher;
+    private boolean isUriPermission = false;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,6 +66,17 @@ public class ImageFragment extends Fragment {
         dialog.setCancelable(false);
         dialog.show();
         list = new ArrayList<>();
+
+        if(!isUriPermission)
+        {
+            folderPermission();
+        }
+
+        if(!checkPermission())
+        {
+            showPermission();
+        }
+
 
         if (Utils.STATUS_DIRECTORY.exists()) {
 
@@ -108,6 +142,41 @@ public class ImageFragment extends Fragment {
             binding.rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
             dialog.dismiss();
 
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+//                if(result.getResultCode() == RESULT_OK)
+//                {
+//                    if(result.getData() != null)
+//                    {
+//                        Statues statues;
+//                        Uri treeUri = result.getData().getData();
+//                        requireContext().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//
+//                        DocumentFile documentFile = DocumentFile.fromTreeUri(requireContext(), treeUri);
+//
+//                        for(DocumentFile file : documentFile.listFiles())
+//                        {
+//                            File file1 = new File(file.toString());
+//                             statues = new Statues(file.getName(), file.getUri().getPath(),file1,file.getUri());
+//                            list.add(statues);
+//                        }
+//                    }
+
+                    if(result.getResultCode() == RESULT_OK)
+                    {
+                        Uri treeUri = result.getData().getData();
+                        if(treeUri != null)
+                        {
+                            Toast.makeText(requireContext(), ""+treeUri, Toast.LENGTH_SHORT).show();
+                            requireContext().getContentResolver().takePersistableUriPermission( treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            DocumentFile file = DocumentFile.fromTreeUri(requireContext(), treeUri);
+                        }
+                    }
+                }
+//            }
+        });
+
 
         return binding.getRoot();
     }
@@ -142,4 +211,78 @@ public class ImageFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void folderPermission()
+    {
+
+        StorageManager storageManager = (StorageManager) requireContext().getSystemService(Context.STORAGE_SERVICE);
+        Intent intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
+        String targetUri ="GBWhatsApp%2FMedia%2F.Statuses";
+        Uri uri = intent.getParcelableExtra("android.provider.extra.INITIAL_URI");
+        String scheme = uri.toString();
+        scheme = scheme.replace("/root/", "/tree/");
+        scheme = scheme + "%3A" + targetUri;
+
+        uri = Uri.parse(scheme);
+        intent.putExtra("android.provider.extra.INITIAL_URI", uri);
+        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+        startActivityForResult(intent,6);
+//       launcher.launch(intent);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK)
+        {
+            if(data != null)
+            {
+                Statues model;
+                Uri treeUri = data.getData();
+                requireContext().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION |
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                Toast.makeText(requireContext(), ""+treeUri, Toast.LENGTH_SHORT).show();
+                DocumentFile documentFile = DocumentFile.fromTreeUri(requireContext(), treeUri);
+                isUriPermission = true;
+//                DocumentFile[] documentFiles = documentFile.listFiles();
+//                for (int i = 0; i < documentFiles.length; i++) {
+//                    documentFiles[i].getUri().toString();
+//                    DocumentFile singlefile = documentFiles[i];
+//
+//                    if (singlefile.getUri().toString().endsWith(".png") || singlefile.getUri().toString().endsWith(".jpg")) {
+//                        File file = new File(singlefile.getUri().toString());
+//                        model = new Statues("whats " + i, documentFiles[i].getName(), file, singlefile.getUri());
+//                    list.add(model);
+//                    adapter.notifyDataSetChanged();
+//                    }
+//                }
+
+            }
+        }
+    }
+    private void showPermission()
+    {
+        // permission for 23 to 29 SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+            }
+        }
+    }
+
+    private boolean checkPermission() {
+
+        int write = ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int read = ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        return write == PackageManager.PERMISSION_GRANTED &&
+                read == PackageManager.PERMISSION_GRANTED;
+
+    }
 }

@@ -4,21 +4,19 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.os.Build.VERSION.SDK_INT;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
+import android.os.storage.StorageManager;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -33,20 +31,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.play.core.review.ReviewInfo;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.tasks.OnCompleteListener;
 import com.google.android.play.core.tasks.Task;
+import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.HomeTabVIewPagerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog;
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog_Privacy;
-import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Permission;
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.HomeFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.SaveFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityMainBinding;
+
+import org.w3c.dom.Document;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private ReviewInfo info ;
     private ReviewManager manager;
     private boolean isGranted = false;
-
+    private HomeTabVIewPagerAdapter adapter;
+    private String [] tabTitles = new String[]{"IMAGES" , "VIDEOS","SAVED"};
+    private ActivityResultLauncher<Intent> launcher;
 
     @RequiresApi(api = Build.VERSION_CODES.R)
     @Override
@@ -69,11 +72,21 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Status Saver for Whatsapp");
         setSupportActionBar(toolbar);
 
+        if(!checkPermission())
+        {
+            showPermission();
+        }
 //        activeReviewInfo();
+        adapter = new HomeTabVIewPagerAdapter(MainActivity.this);
+        binding.vpHome.setAdapter(adapter);
+
+        new TabLayoutMediator(binding.tabHomeLayout, binding.vpHome,(((tab, position) -> tab.setText(tabTitles[position])))).attach();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout, toolbar , R.string.OpenDrawer , R.string.CloseDrawer);
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+
+        folderPermission();
 
         binding.navView.setItemIconTintList(null);
         binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -108,86 +121,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if(isGranted)
-        {
-            binding.storagePermission.getRoot().setVisibility(View.GONE);
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
-            fragmentTransaction.commit();
-        }
-        binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
-            public void onClick(View v) {
-                showPermissionDialog();
+            public void onActivityResult(ActivityResult result) {
+                if(result.getResultCode() == RESULT_OK)
+                {
+                    if(result.getData() != null)
+                    {
+                        Uri treeUri = result.getData().getData();
+                        getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION |
+                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        Toast.makeText(MainActivity.this, ""+treeUri, Toast.LENGTH_SHORT).show();
+                        DocumentFile documentFile = DocumentFile.fromTreeUri(MainActivity.this, treeUri);
+
+                    }
+                }
             }
         });
-    }
-
-    private void showPermissionDialog() {
-        if (SDK_INT >= Build.VERSION_CODES.R) {
-
-            try {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                intent.addCategory("android.intent.category.DEFAULT");
-                intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
-                startActivityForResult(intent, 2000);
-            } catch (Exception e) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                startActivityForResult(intent, 2000);
-
-            }
-
-        } else
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, 333);
-    }
-
-        @RequiresApi(api = Build.VERSION_CODES.R)
-        private boolean checkPermission() {
-        if (SDK_INT >= Build.VERSION_CODES.R) {
-            return Environment.isExternalStorageManager();
-        } else {
-            int write = ContextCompat.checkSelfPermission(getApplicationContext(),
-                    WRITE_EXTERNAL_STORAGE);
-            int read = ContextCompat.checkSelfPermission(getApplicationContext(),
-                    READ_EXTERNAL_STORAGE);
-
-            return write == PackageManager.PERMISSION_GRANTED &&
-                    read == PackageManager.PERMISSION_GRANTED;
-        }
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull @org.jetbrains.annotations.NotNull String[] permissions, @NonNull @org.jetbrains.annotations.NotNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 333) {
-            if (grantResults.length > 0) {
-                boolean write = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                boolean read = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-
-                if (read && write){
-
-                }else {
-
-                }
+    private void showPermission()
+    {
+        // permission for 23 to 29 SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
             }
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 2000) {
-            if (SDK_INT >= Build.VERSION_CODES.R) {
-                if (Environment.isExternalStorageManager()) {
+    private boolean checkPermission() {
 
-                } else {
+        int write = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int read = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
 
-                }
-            }
-        }
+        return write == PackageManager.PERMISSION_GRANTED &&
+                read == PackageManager.PERMISSION_GRANTED;
+
     }
+
 
     private void shareApp()
     {
@@ -314,20 +292,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.R)
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if(checkPermission())
-        {
-            isGranted = true;
-            binding.storagePermission.getRoot().setVisibility(View.GONE);
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.frMainContainer , new HomeFragment());
-            fragmentTransaction.commit();
-        }else {
-            Toast.makeText(this, "Please Allow Storage Permission", Toast.LENGTH_SHORT).show();
-        }
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void folderPermission()
+    {
+
+        StorageManager storageManager = (StorageManager) getSystemService(Context.STORAGE_SERVICE);
+        Intent intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
+        String targetUri ="GBWhatsApp%2FMedia%2F.Statuses";
+        Uri uri = intent.getParcelableExtra("android.provider.extra.INITIAL_URI");
+        String scheme = uri.toString();
+        scheme = scheme.replace("/root/", "/tree/");
+        scheme = scheme + "%3A" + targetUri;
+
+        uri = Uri.parse(scheme);
+        intent.putExtra("android.provider.extra.INITIAL_URI", uri);
+        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+        startActivityForResult(intent,6);
+//        launcher.launch(intent);
 
     }
+
 }
