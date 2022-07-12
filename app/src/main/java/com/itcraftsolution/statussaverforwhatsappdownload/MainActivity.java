@@ -72,11 +72,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("Status Saver for Whatsapp");
         setSupportActionBar(toolbar);
 
-        if(!checkPermission())
-        {
-            showPermission();
-        }
-//        activeReviewInfo();
         adapter = new HomeTabVIewPagerAdapter(MainActivity.this);
         binding.vpHome.setAdapter(adapter);
 
@@ -85,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout, toolbar , R.string.OpenDrawer , R.string.CloseDrawer);
         binding.drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-        folderPermission();
 
         binding.navView.setItemIconTintList(null);
         binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -121,50 +114,50 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if(result.getResultCode() == RESULT_OK)
-                {
-                    if(result.getData() != null)
-                    {
-                        Uri treeUri = result.getData().getData();
-                        getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION |
-                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        Toast.makeText(MainActivity.this, ""+treeUri, Toast.LENGTH_SHORT).show();
-                        DocumentFile documentFile = DocumentFile.fromTreeUri(MainActivity.this, treeUri);
-
-                    }
-                }
-            }
-        });
-
-    }
-
-    private void showPermission()
-    {
-        // permission for 23 to 29 SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
-            }
-        }
-    }
-
-    private boolean checkPermission() {
-
-        int write = ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int read = ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        return write == PackageManager.PERMISSION_GRANTED &&
-                read == PackageManager.PERMISSION_GRANTED;
+//        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+//            @Override
+//            public void onActivityResult(ActivityResult result) {
+//                if(result.getResultCode() == RESULT_OK)
+//                {
+//                    if(result.getData() != null)
+//                    {
+//                        Uri treeUri = result.getData().getData();
+//                        getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION |
+//                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                        Toast.makeText(MainActivity.this, ""+treeUri, Toast.LENGTH_SHORT).show();
+//                        DocumentFile documentFile = DocumentFile.fromTreeUri(MainActivity.this, treeUri);
+//
+//                    }
+//                }
+//            }
+//        });
 
     }
+
+//    private void showPermission()
+//    {
+//        // permission for 23 to 29 SDK
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//        {
+//            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+//                    ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+//            {
+//                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+//            }
+//        }
+//    }
+//
+//    private boolean checkPermission() {
+//
+//        int write = ContextCompat.checkSelfPermission(getApplicationContext(),
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        int read = ContextCompat.checkSelfPermission(getApplicationContext(),
+//                Manifest.permission.READ_EXTERNAL_STORAGE);
+//
+//        return write == PackageManager.PERMISSION_GRANTED &&
+//                read == PackageManager.PERMISSION_GRANTED;
+//
+//    }
 
 
     private void shareApp()
@@ -292,24 +285,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    private void folderPermission()
-    {
-
-        StorageManager storageManager = (StorageManager) getSystemService(Context.STORAGE_SERVICE);
-        Intent intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
-        String targetUri ="GBWhatsApp%2FMedia%2F.Statuses";
-        Uri uri = intent.getParcelableExtra("android.provider.extra.INITIAL_URI");
-        String scheme = uri.toString();
-        scheme = scheme.replace("/root/", "/tree/");
-        scheme = scheme + "%3A" + targetUri;
-
-        uri = Uri.parse(scheme);
-        intent.putExtra("android.provider.extra.INITIAL_URI", uri);
-        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        startActivityForResult(intent,6);
-//        launcher.launch(intent);
-
-    }
 
 }

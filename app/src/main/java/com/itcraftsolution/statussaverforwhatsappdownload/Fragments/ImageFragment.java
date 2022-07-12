@@ -51,8 +51,9 @@ public class ImageFragment extends Fragment {
     private ArrayList<Statues> list;
     private ImageRecyclerAdapter adapter;
     private ProgressDialog dialog;
-     ActivityResultLauncher<Intent> launcher;
-    private boolean isUriPermission = false;
+    private SharedPreferences spf;
+    private boolean isFolderPermissionGranted;
+    private String istreeUri;
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
@@ -61,154 +62,104 @@ public class ImageFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentImageBinding.inflate(getLayoutInflater());
 
-        dialog = new ProgressDialog(requireContext());
-        dialog.setMessage("Statuses Loading ....");
-        dialog.setCancelable(false);
-        dialog.show();
+//        dialog = new ProgressDialog(requireContext());
+//        dialog.setMessage("Statuses Loading ....");
+//        dialog.setCancelable(false);
+//        dialog.show();
         list = new ArrayList<>();
 
-        if(!isUriPermission)
+        spf = requireContext().getSharedPreferences("FolderPermission", Context.MODE_PRIVATE);
+
+        isFolderPermissionGranted = spf.getBoolean("isGranted", false);
+        istreeUri = spf.getString("PATH", null);
+
+        if(!isFolderPermissionGranted)
         {
             folderPermission();
-        }
+        }else{
+            requireContext().getContentResolver().takePersistableUriPermission(Uri.parse(istreeUri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            if(istreeUri != null)
+            {
+                Statues model;
 
-        if(!checkPermission())
-        {
-            showPermission();
-        }
+                DocumentFile file = DocumentFile.fromTreeUri(requireContext(), Uri.parse(istreeUri));
+                DocumentFile[] documentFiles = file.listFiles();
 
+                for (int i = 0; i < documentFiles.length; i++) {
+                    documentFiles[i].getUri().toString();
+                    DocumentFile singlefile = documentFiles[i];
 
-        if (Utils.STATUS_DIRECTORY.exists()) {
+                    if (singlefile.getUri().toString().endsWith(".png") || singlefile.getUri().toString().endsWith(".jpg")) {
+                        File file1 = new File(singlefile.getUri().toString());
+                        model = new Statues("whats " + i, documentFiles[i].getName(), file1, singlefile.getUri());
+                        list.add(model);
 
-            getData(Utils.STATUS_DIRECTORY);
-            dialog.dismiss();
-            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    dialog.show();
-                    list = new ArrayList<>();
-                    getData(Utils.STATUS_DIRECTORY);
-                    binding.imageRefershView.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
-                    dialog.dismiss();
-                }
-            });
-
-        } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
-
-            getData(Utils.STATUS_DIRECTORY_NEW);
-            dialog.dismiss();
-            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    dialog.show();
-                    list = new ArrayList<>();
-                    getData(Utils.STATUS_DIRECTORY_NEW);
-                    binding.imageRefershView.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
-                    dialog.dismiss();
-                }
-            });
-
-        } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
-
-            getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
-            dialog.dismiss();
-            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    dialog.show();
-                    list = new ArrayList<>();
-                    getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
-                    binding.imageRefershView.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
-                    dialog.dismiss();
-                }
-            });
-        } else {
-            binding.imageRefershView.setRefreshing(false);
-            dialog.dismiss();
-            Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
-        }
-
-        if(list.isEmpty())
-        {
-            binding.rvImage.setVisibility(View.GONE);
-            binding.VNotFoundImage.setVisibility(View.VISIBLE);
-        }
-
-            adapter = new ImageRecyclerAdapter(requireContext(), list);
-            binding.rvImage.setAdapter(adapter);
-            binding.rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
-            dialog.dismiss();
-
-        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-//                if(result.getResultCode() == RESULT_OK)
-//                {
-//                    if(result.getData() != null)
-//                    {
-//                        Statues statues;
-//                        Uri treeUri = result.getData().getData();
-//                        requireContext().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//
-//                        DocumentFile documentFile = DocumentFile.fromTreeUri(requireContext(), treeUri);
-//
-//                        for(DocumentFile file : documentFile.listFiles())
-//                        {
-//                            File file1 = new File(file.toString());
-//                             statues = new Statues(file.getName(), file.getUri().getPath(),file1,file.getUri());
-//                            list.add(statues);
-//                        }
-//                    }
-
-                    if(result.getResultCode() == RESULT_OK)
-                    {
-                        Uri treeUri = result.getData().getData();
-                        if(treeUri != null)
-                        {
-                            Toast.makeText(requireContext(), ""+treeUri, Toast.LENGTH_SHORT).show();
-                            requireContext().getContentResolver().takePersistableUriPermission( treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                            DocumentFile file = DocumentFile.fromTreeUri(requireContext(), treeUri);
-                        }
                     }
                 }
-//            }
-        });
-
-
-        return binding.getRoot();
-    }
-
-
-    private void getData(File file) {
-
-        Statues model;
-
-        File[] allfiles = file.listFiles();
-
-
-        Arrays.sort(allfiles, ((o1, o2) -> {
-            if (o1.lastModified() > o2.lastModified()) {
-                return -1;
-            } else if (o1.lastModified() < o2.lastModified()) {
-                return +1;
-            } else {
-                return 0;
-            }
-        }));
-
-        for (int i = 0; i < allfiles.length; i++) {
-            File singlefile = allfiles[i];
-
-            if (Uri.fromFile(singlefile).toString().endsWith(".png") || Uri.fromFile(singlefile).toString().endsWith(".jpg")) {
-                model = new Statues("whats " + i, allfiles[i].getAbsolutePath(), singlefile, Uri.fromFile(singlefile));
-
-                list.add(model);
+                setupRecyclerview(list);
             }
         }
 
+//        if (Utils.STATUS_DIRECTORY.exists()) {
+//
+//            getData(Utils.STATUS_DIRECTORY);
+//            dialog.dismiss();
+//            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    dialog.show();
+//                    list = new ArrayList<>();
+//                    getData(Utils.STATUS_DIRECTORY);
+//                    binding.imageRefershView.setRefreshing(false);
+//                    adapter.notifyDataSetChanged();
+//                    dialog.dismiss();
+//                }
+//            });
+//
+//        } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
+//
+//            getData(Utils.STATUS_DIRECTORY_NEW);
+//            dialog.dismiss();
+//            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    dialog.show();
+//                    list = new ArrayList<>();
+//                    getData(Utils.STATUS_DIRECTORY_NEW);
+//                    binding.imageRefershView.setRefreshing(false);
+//                    adapter.notifyDataSetChanged();
+//                    dialog.dismiss();
+//                }
+//            });
+//
+//        } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
+//
+//            getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
+//            dialog.dismiss();
+//            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    dialog.show();
+//                    list = new ArrayList<>();
+//                    getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
+//                    binding.imageRefershView.setRefreshing(false);
+//                    adapter.notifyDataSetChanged();
+//                    dialog.dismiss();
+//                }
+//            });
+//        } else {
+//            binding.imageRefershView.setRefreshing(false);
+//            dialog.dismiss();
+//            Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+//        }
+//
+//        if(list.isEmpty())
+//        {
+//            binding.rvImage.setVisibility(View.GONE);
+//            binding.VNotFoundImage.setVisibility(View.VISIBLE);
+//        }
+
+        return binding.getRoot();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
@@ -227,7 +178,6 @@ public class ImageFragment extends Fragment {
         intent.putExtra("android.provider.extra.INITIAL_URI", uri);
         intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
         startActivityForResult(intent,6);
-//       launcher.launch(intent);
 
     }
 
@@ -240,49 +190,59 @@ public class ImageFragment extends Fragment {
             {
                 Statues model;
                 Uri treeUri = data.getData();
-                requireContext().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION |
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                requireContext().getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 Toast.makeText(requireContext(), ""+treeUri, Toast.LENGTH_SHORT).show();
                 DocumentFile documentFile = DocumentFile.fromTreeUri(requireContext(), treeUri);
-                isUriPermission = true;
-//                DocumentFile[] documentFiles = documentFile.listFiles();
-//                for (int i = 0; i < documentFiles.length; i++) {
-//                    documentFiles[i].getUri().toString();
-//                    DocumentFile singlefile = documentFiles[i];
+
+
+                SharedPreferences.Editor edit = spf.edit();
+                edit.putBoolean("isGranted", true);
+                edit.putString("PATH", treeUri.toString());
+                edit.apply();
+
+                DocumentFile[] documentFiles = documentFile.listFiles();
+                for (int i = 0; i < documentFiles.length; i++) {
+                    documentFiles[i].getUri().toString();
+                    DocumentFile singlefile = documentFiles[i];
+
+                    if (singlefile.getUri().toString().endsWith(".png") || singlefile.getUri().toString().endsWith(".jpg")) {
+                        File file = new File(singlefile.getUri().toString());
+                        model = new Statues("whats " + i, documentFiles[i].getName(), file, singlefile.getUri());
+                    list.add(model);
+                    }
+                }
+                setupRecyclerview(list);
+            }
+        }
+    }
+//    private void showPermission()
+//    {
+//        // permission for 23 to 29 SDK
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//        {
+//            if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+//                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+//            {
+//                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+//            }
+//        }
+//    }
 //
-//                    if (singlefile.getUri().toString().endsWith(".png") || singlefile.getUri().toString().endsWith(".jpg")) {
-//                        File file = new File(singlefile.getUri().toString());
-//                        model = new Statues("whats " + i, documentFiles[i].getName(), file, singlefile.getUri());
-//                    list.add(model);
-//                    adapter.notifyDataSetChanged();
-//                    }
-//                }
-
-            }
-        }
-    }
-    private void showPermission()
+//    private boolean checkPermission() {
+//
+//        int write = ContextCompat.checkSelfPermission(requireContext(),
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        int read = ContextCompat.checkSelfPermission(requireContext(),
+//                Manifest.permission.READ_EXTERNAL_STORAGE);
+//
+//        return write == PackageManager.PERMISSION_GRANTED &&
+//                read == PackageManager.PERMISSION_GRANTED;
+//
+//    }
+    private void setupRecyclerview(ArrayList<Statues> statusList)
     {
-        // permission for 23 to 29 SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
-            }
-        }
-    }
-
-    private boolean checkPermission() {
-
-        int write = ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int read = ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        return write == PackageManager.PERMISSION_GRANTED &&
-                read == PackageManager.PERMISSION_GRANTED;
-
+        adapter = new ImageRecyclerAdapter(requireContext(), statusList);
+        binding.rvImage.setAdapter(adapter);
+        binding.rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
     }
 }

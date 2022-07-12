@@ -1,8 +1,12 @@
 package com.itcraftsolution.statussaverforwhatsappdownload.Fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -13,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ImageRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.VideoRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
@@ -28,6 +33,9 @@ public class VideoFragment extends Fragment {
     private FragmentVideoBinding binding;
     private ArrayList<Statues> list;
     private VideoRecyclerAdapter adapter;
+    private SharedPreferences spf;
+    private boolean isFolderPermissionGranted;
+    private String istreeUri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,49 +46,34 @@ public class VideoFragment extends Fragment {
 
 
         list = new ArrayList<>();
+        spf = requireContext().getSharedPreferences("FolderPermission", Context.MODE_PRIVATE);
 
-        if (Utils.STATUS_DIRECTORY.exists()) {
+        isFolderPermissionGranted = spf.getBoolean("isGranted", false);
+        istreeUri = spf.getString("PATH", null);
 
-            getData(Utils.STATUS_DIRECTORY);
-            binding.refreshVideo.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    list.clear();
-                    getData(Utils.STATUS_DIRECTORY);
-                    binding.refreshVideo.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
+
+            if(istreeUri != null)
+            {
+                Statues model;
+
+                requireContext().getContentResolver().takePersistableUriPermission(Uri.parse(istreeUri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                DocumentFile file = DocumentFile.fromTreeUri(requireContext(), Uri.parse(istreeUri));
+                DocumentFile[] documentFiles = file.listFiles();
+
+                for (int i = 0; i < documentFiles.length; i++) {
+                    documentFiles[i].getUri().toString();
+                    DocumentFile singlefile = documentFiles[i];
+
+                    if (singlefile.getUri().toString().endsWith(".mp4")) {
+                        File file1 = new File(singlefile.getUri().toString());
+                        model = new Statues("whats " + i, documentFiles[i].getName(), file1, singlefile.getUri());
+                        list.add(model);
+
+                    }
                 }
-            });
+                setupRecyclerview(list);
+            }
 
-        } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
-
-            getData(Utils.STATUS_DIRECTORY_NEW);
-            binding.refreshVideo.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    list.clear();
-                    getData(Utils.STATUS_DIRECTORY_NEW);
-                    binding.refreshVideo.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
-                }
-            });
-
-        } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
-
-            getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
-            binding.refreshVideo.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    list.clear();
-                    getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
-                    binding.refreshVideo.setRefreshing(false);
-                    adapter.notifyDataSetChanged();
-                }
-            });
-        } else {
-            binding.refreshVideo.setRefreshing(false);
-            Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
-        }
 
         if(list.isEmpty())
         {
@@ -94,39 +87,10 @@ public class VideoFragment extends Fragment {
         }
         return binding.getRoot();
     }
-
-
-    private void getData(File file)
-    {
-        Statues model ;
-
-        File[] allfiles = file.listFiles();
-
-        Arrays.sort(allfiles ,((o1, o2) ->{
-            if(o1.lastModified() > o2.lastModified())
-            {
-                return -1;
-            }
-            else if(o1.lastModified() < o2.lastModified())
-            {
-                return +1;
-            }
-            else {
-                return 0;
-            }
-        }));
-
-        for(int i = 0 ; i < allfiles.length; i++)
+    private void setupRecyclerview(ArrayList<Statues> statusList)
         {
-            File singlefile = allfiles[i] ;
-
-            if(Uri.fromFile(singlefile).toString().endsWith(".mp4")  )
-            {
-                model = new Statues("whats "+i,allfiles[i].getAbsolutePath() , singlefile, Uri.fromFile(singlefile));
-
-                list.add(model);
-            }
+            adapter = new VideoRecyclerAdapter(requireContext(), statusList);
+            binding.rvVideo.setAdapter(adapter);
+            binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
         }
-
-    }
 }
