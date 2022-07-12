@@ -1,20 +1,20 @@
 package com.itcraftsolution.statussaverforwhatsappdownload.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.VideoDetailsFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
+import com.itcraftsolution.statussaverforwhatsappdownload.VideoDetailActivity;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.SampleResentBinding;
 
 import java.util.ArrayList;
@@ -61,10 +61,8 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
                 edit.putString("FILE_PATH", model.getFilename().getAbsolutePath());
                 edit.apply();
 
-                ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frMainContainer , new VideoDetailsFragment())
-                        .addToBackStack(null)
-                        .commit();
+                Intent intent = new Intent(context, VideoDetailActivity.class);
+                context.startActivity(intent);
             }
         });
     }

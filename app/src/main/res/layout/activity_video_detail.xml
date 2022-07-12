@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
-    tools:context=".Fragments.ImageDetailsFragment">
+    tools:context=".VideoDetailActivity">
 
-    <ImageView
-        android:id="@+id/FullSizeImage"
+    <VideoView
+        android:id="@+id/VideoView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -53,7 +52,6 @@
         app:layout_constraintStart_toStartOf="@+id/fabMainDetails"
         app:maxImageSize="40dp" />
 
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabMainDetails"
         android:layout_width="wrap_content"
@@ -69,6 +67,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="36dp" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

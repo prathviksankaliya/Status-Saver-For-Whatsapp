@@ -1,4 +1,6 @@
-package com.itcraftsolution.statussaverforwhatsappdownload.Fragments;
+package com.itcraftsolution.statussaverforwhatsappdownload;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,33 +8,21 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.os.StrictMode;
-import android.provider.MediaStore;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.MediaController;
 
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
-import com.itcraftsolution.statussaverforwhatsappdownload.R;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
-import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentVideoDetailsBinding;
+import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityVideoDetailBinding;
 
 import java.io.File;
 
+public class VideoDetailActivity extends AppCompatActivity {
 
-public class VideoDetailsFragment extends Fragment {
-
-    public VideoDetailsFragment() {
-        // Required empty public constructor
-    }
-
-    private FragmentVideoDetailsBinding binding;
+    private ActivityVideoDetailBinding binding;
     private String VideoUri, filepath;
     private Animation fabOpen, fabClose, rotateForward, rotatebackward;
     private int DURATION = 300;
@@ -41,20 +31,19 @@ public class VideoDetailsFragment extends Fragment {
     private Uri uri;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
-        binding = FragmentVideoDetailsBinding.inflate(getLayoutInflater());
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityVideoDetailBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         LoadData();
 
-        fabOpen = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation(requireContext(), R.anim.fab_close);
-        rotateForward = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_forward);
-        rotatebackward = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate_backward);
+        fabOpen = AnimationUtils.loadAnimation(VideoDetailActivity.this, R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation(VideoDetailActivity.this, R.anim.fab_close);
+        rotateForward = AnimationUtils.loadAnimation(VideoDetailActivity.this, R.anim.rotate_forward);
+        rotatebackward = AnimationUtils.loadAnimation(VideoDetailActivity.this, R.anim.rotate_backward);
 
         rotateForward.setDuration(DURATION);
         rotatebackward.setDuration(DURATION);
@@ -84,16 +73,14 @@ public class VideoDetailsFragment extends Fragment {
             public void onClick(View v) {
                 File file = new File(filepath);
                 Statues status = new Statues(file.getName() , filepath , file , uri);
-                Utils.copyFile(status , requireContext());
+                Utils.copyFile(status , VideoDetailActivity.this);
 
             }
         });
-        return binding.getRoot();
     }
-
     private void LoadData()
     {
-        SharedPreferences spf = requireContext().getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
+        SharedPreferences spf = VideoDetailActivity.this.getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
         VideoUri = spf.getString("URI" , null);
         filepath = spf.getString("FILE_PATH" , null);
         isSaved = spf.getBoolean("isSaved" , false);
@@ -105,7 +92,7 @@ public class VideoDetailsFragment extends Fragment {
         uri = Uri.parse(VideoUri);
 
         binding.VideoView.setVideoURI(uri);
-        MediaController mediaController = new MediaController(requireContext());
+        MediaController mediaController = new MediaController(VideoDetailActivity.this);
         mediaController.setAnchorView(binding.VideoView);
         mediaController.setMediaPlayer(binding.VideoView);
         binding.VideoView.setMediaController(mediaController);
@@ -142,4 +129,7 @@ public class VideoDetailsFragment extends Fragment {
             isOpen = true;
         }
     }
+
+
+
 }

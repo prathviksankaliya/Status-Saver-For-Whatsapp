@@ -1,17 +1,18 @@
 package com.itcraftsolution.statussaverforwhatsappdownload.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.ImageDetailsFragment;
+import com.itcraftsolution.statussaverforwhatsappdownload.ImageDetailActivity;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
@@ -50,17 +51,15 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         holder.binding.igResentSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Toast.makeText(context, "item click", Toast.LENGTH_SHORT).show();
                 SharedPreferences spf = context.getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
                 SharedPreferences.Editor edit = spf.edit();
                 edit.putString("URI", model.getUri().toString());
                 edit.putString("FILE_PATH", model.getFilename().getAbsolutePath());
                 edit.apply();
 
-                ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.frMainContainer , new ImageDetailsFragment())
-                        .addToBackStack(null)
-                        .commit();
+                Intent intent = new Intent(context, ImageDetailActivity.class);
+                context.startActivity(intent);
             }
         });
     }

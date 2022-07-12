@@ -1,6 +1,7 @@
 package com.itcraftsolution.statussaverforwhatsappdownload.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.ImageDetailsFragment;
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.VideoDetailsFragment;
+import com.itcraftsolution.statussaverforwhatsappdownload.ImageDetailActivity;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
+import com.itcraftsolution.statussaverforwhatsappdownload.VideoDetailActivity;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.SampleSavedBinding;
 
 import java.util.ArrayList;
@@ -44,12 +45,12 @@ public class SavedRecyclerAdapter extends RecyclerView.Adapter<SavedRecyclerAdap
         if(model.getFilename().getName().endsWith(".mp4"))
         {
             holder.binding.igVideo.setVisibility(View.VISIBLE);
-            Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
+
         }else {
             holder.binding.igVideo.setVisibility(View.GONE);
-            Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
-        }
 
+        }
+        Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,15 +64,11 @@ public class SavedRecyclerAdapter extends RecyclerView.Adapter<SavedRecyclerAdap
 
                 if(model.getFilename().getName().endsWith(".mp4"))
                 {
-                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frMainContainer , new VideoDetailsFragment())
-                            .addToBackStack(null)
-                            .commit();
+                    Intent intent = new Intent(context, VideoDetailActivity.class);
+                    context.startActivity(intent);
                 }else {
-                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frMainContainer , new ImageDetailsFragment())
-                            .addToBackStack(null)
-                            .commit();
+                    Intent intent = new Intent(context, ImageDetailActivity.class);
+                    context.startActivity(intent);
                 }
             }
         });
