@@ -1,16 +1,25 @@
 package com.itcraftsolution.statussaverforwhatsappdownload;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
@@ -63,18 +72,28 @@ public class ImageDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("image/jpg");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "Check Out This Whatsapp Status From @StatusSaverForWhatsapp #Statues #StatusSaver");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + filepath));
-                startActivity(Intent.createChooser(shareIntent, "Share Image"));
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "I'm using @StatusSaver app: https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint. #Statues #StatusSaver");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(ImageUri));
+                startActivity(Intent.createChooser(shareIntent, "Share Statues"));
+
             }
         });
 
         binding.fabDetailsDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File file = new File(filepath);
-                Statues status = new Statues(file.getName() , filepath , file , uri);
-                Utils.copyFile(status , ImageDetailActivity.this);
+
+                if(!checkPermission())
+                {
+                    showPermission();
+                }else{
+//                    BitmapDrawable bitmapDrawable = (BitmapDrawable) binding.FullSizeImage.getDrawable();
+//                    Bitmap bitmap = bitmapDrawable.getBitmap();
+//                    Utils.saveImgIntoGallery(ImageDetailActivity.this, bitmap);
+                    File file = new File(filepath);
+                    Statues status = new Statues(file.getName() , filepath , file , uri);
+                    Utils.saveImgIntoGallery( ImageDetailActivity.this, status);
+                }
             }
         });
 
@@ -118,5 +137,30 @@ public class ImageDetailActivity extends AppCompatActivity {
 
             isOpen = true;
         }
+    }
+
+    private void showPermission()
+    {
+        // permission for 23 to 29 SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(ContextCompat.checkSelfPermission(ImageDetailActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(ImageDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(ImageDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+            }
+        }
+    }
+
+    private boolean checkPermission() {
+
+        int write = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int read = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        return write == PackageManager.PERMISSION_GRANTED &&
+                read == PackageManager.PERMISSION_GRANTED;
+
     }
 }
