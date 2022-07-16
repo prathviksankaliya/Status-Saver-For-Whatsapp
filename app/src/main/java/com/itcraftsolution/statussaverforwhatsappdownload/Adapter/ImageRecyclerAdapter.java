@@ -44,21 +44,16 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         holder.binding.btnDownloadResent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.copyFile(model , context);
+                Utils.saveImgIntoGallery(context, model);
             }
         });
 
         holder.binding.igResentSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "item click", Toast.LENGTH_SHORT).show();
-                SharedPreferences spf = context.getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit = spf.edit();
-                edit.putString("URI", model.getUri().toString());
-                edit.putString("FILE_PATH", model.getFilename().getAbsolutePath());
-                edit.apply();
-
                 Intent intent = new Intent(context, ImageDetailActivity.class);
+                intent.putExtra("URI", model.getUri().toString());
+                intent.putExtra("FILE_PATH", model.getFilename().getAbsolutePath());
                 context.startActivity(intent);
             }
         });

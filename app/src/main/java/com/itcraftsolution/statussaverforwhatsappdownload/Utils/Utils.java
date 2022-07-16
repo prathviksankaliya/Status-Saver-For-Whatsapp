@@ -55,52 +55,45 @@ public class Utils {
 
     public static File STATUS_DIRECTORY_GBWHATSAPP = new File(Environment.getExternalStorageDirectory() +
             File.separator + "/GBWhatsapp/Media/.statuses");
-
-    public static File RootDirectorywhatsapp =
-            new File(Environment.getExternalStorageDirectory()+ "/StatusSaverForWhatsapp");
-
-    public static void createFileFolder()
-    {
-        if(!RootDirectorywhatsapp.exists())
-        {
-            RootDirectorywhatsapp.mkdirs();
-        }
-    }
+//
+//    public static File RootDirectorywhatsapp =
+//            new File(Environment.getExternalStorageDirectory()+ "/StatusSaverForWhatsapp");
 
 
-    public static void copyFile(Statues status, Context context) {
 
-        File file = new File(APP_DIR);
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                Toast.makeText(context, "Somthing went wrong !!", Toast.LENGTH_SHORT).show();
-            }
-        }
+//    public static void copyFile(Statues status, Context context) {
+//
+//        File file = new File(APP_DIR);
+//        if (!file.exists()) {
+//            if (!file.mkdirs()) {
+//                Toast.makeText(context, "Somthing went wrong !!", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//
+//        String fileName;
+//
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+//        String currentDateTime = sdf.format(new Date());
+//
+//        if (status.getFilename().getName().endsWith(".mp4")) {
+//            fileName = "VID_" + currentDateTime + ".mp4";
+//        } else {
+//            fileName = "IMG_" + currentDateTime + ".jpg";
+//        }
+//
+//        File destFile = new File(file + File.separator + fileName);
+//
+//        try {
+//            org.apache.commons.io.FileUtils.copyFile(status.getFilename(), destFile);
+//            destFile.setLastModified(System.currentTimeMillis());
+//            new SingleMediaScanner(context, file);
+////            showNotification(context, destFile, status);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        String fileName;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-        String currentDateTime = sdf.format(new Date());
-
-        if (status.getFilename().getName().endsWith(".mp4")) {
-            fileName = "VID_" + currentDateTime + ".mp4";
-        } else {
-            fileName = "IMG_" + currentDateTime + ".jpg";
-        }
-
-        File destFile = new File(file + File.separator + fileName);
-
-        try {
-            org.apache.commons.io.FileUtils.copyFile(status.getFilename(), destFile);
-            destFile.setLastModified(System.currentTimeMillis());
-            new SingleMediaScanner(context, file);
-//            showNotification(context, destFile, status);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public static void saveImgIntoGallery(Context context , Statues statues)
     {

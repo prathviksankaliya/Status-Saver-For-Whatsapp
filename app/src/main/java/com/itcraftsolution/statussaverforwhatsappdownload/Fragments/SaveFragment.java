@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.SavedRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
+import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentSaveBinding;
 
 import java.io.File;
@@ -45,32 +46,36 @@ public class SaveFragment extends Fragment {
 
         list = new ArrayList<>();
 
-        File STATUS_DIRECTORY = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "StatusSaverForWhatsapp/");
+//        File STATUS_DIRECTORY = new File(Environment.getExternalStorageDirectory() +
+//                File.separator + "StatusSaverForWhatsapp/");
 
 
-        if (STATUS_DIRECTORY.exists()) {
+        if (Utils.STATUS_SAVER_DIR.exists()) {
 
-            getData(STATUS_DIRECTORY);
-            adapter = new SavedRecyclerAdapter(requireContext(), list);
-            binding.rvSaved.setAdapter(adapter);
-            binding.rvSaved.setLayoutManager(new StaggeredGridLayoutManager(2 , LinearLayoutManager.VERTICAL));
-
-            binding.savedRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    list.clear();
-                    getData(STATUS_DIRECTORY);
-                    adapter.notifyDataSetChanged();
-                    binding.savedRefershView.setRefreshing(false);
-                }
-            });
+            getData(Utils.STATUS_SAVER_DIR);
+            setRecyclerView(list);
 
         }  else {
             binding.savedRefershView.setRefreshing(false);
             binding.rvSaved.setVisibility(View.GONE);
-            Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
         }
+
+        binding.savedRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(Utils.STATUS_SAVER_DIR.exists())
+                {
+                    binding.VNotFoundImage.setVisibility(View.GONE);
+                    binding.rvSaved.setVisibility(View.VISIBLE);
+                    list.clear();
+                    getData(Utils.STATUS_SAVER_DIR);
+                    setRecyclerView(list);
+                }
+                binding.savedRefershView.setRefreshing(false);
+
+            }
+        });
 
         if(list.isEmpty())
         {
@@ -113,5 +118,14 @@ public class SaveFragment extends Fragment {
         }
 
     }
+
+    private void setRecyclerView(ArrayList<Statues> statues)
+    {
+        adapter = new SavedRecyclerAdapter(requireContext(), statues);
+        binding.rvSaved.setAdapter(adapter);
+        binding.rvSaved.setLayoutManager(new StaggeredGridLayoutManager(2 , LinearLayoutManager.VERTICAL));
+    }
+
+
 }
 

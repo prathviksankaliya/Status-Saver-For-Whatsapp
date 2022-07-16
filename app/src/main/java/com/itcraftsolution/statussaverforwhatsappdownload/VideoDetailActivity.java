@@ -14,11 +14,13 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.MediaController;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityVideoDetailBinding;
@@ -62,6 +64,28 @@ public class VideoDetailActivity extends AppCompatActivity {
             }
         });
 
+        binding.fabDetailsDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File fdelete = new File(uri.getPath());
+                if (fdelete.exists()) {
+                    if (fdelete.delete()) {
+                        Toast.makeText(VideoDetailActivity.this, "Status Deleted Successfully", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(VideoDetailActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+                        Toast.makeText(VideoDetailActivity.this, "file not Deleted :" + uri.getPath(), Toast.LENGTH_LONG).show();
+                    }
+
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    intent.setData(Uri.fromFile(fdelete));
+                    sendBroadcast(intent);
+                }
+            }
+        });
+
         binding.fabDetailsShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,28 +101,17 @@ public class VideoDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!checkPermission())
-                {
-                    showPermission();
-                }else{
+
                     File file = new File(filepath);
                     Statues status = new Statues(file.getName() , filepath , file , uri);
                     Utils.saveImgIntoGallery( VideoDetailActivity.this, status);
-                }
             }
         });
     }
     private void LoadData()
     {
-        SharedPreferences spf = VideoDetailActivity.this.getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
-        VideoUri = spf.getString("URI" , null);
-        filepath = spf.getString("FILE_PATH" , null);
-        isSaved = spf.getBoolean("isSaved" , false);
-
-        if(isSaved)
-        {
-            binding.fabDetailsDownload.setVisibility(View.GONE);
-        }
+        VideoUri = getIntent().getStringExtra("URI");
+        filepath = getIntent().getStringExtra("FILE_PATH");
         uri = Uri.parse(VideoUri);
 
         binding.VideoView.setVideoURI(uri);
@@ -115,6 +128,13 @@ public class VideoDetailActivity extends AppCompatActivity {
                 mp.setLooping(true);
             }
         });
+
+        if(getIntent().getBooleanExtra("isSaved", false))
+        {
+            binding.fabDetailsDownload.setVisibility(View.GONE);
+            binding.fabDetailsDelete.setVisibility(View.INVISIBLE);
+            binding.fabDetailsShare.setImageResource(R.drawable.ic_baseline_repeat_24);
+        }
     }
 
 
@@ -123,47 +143,27 @@ public class VideoDetailActivity extends AppCompatActivity {
             binding.fabMainDetails.startAnimation(rotateForward);
             binding.fabDetailsShare.startAnimation(fabClose);
             binding.fabDetailsDownload.startAnimation(fabClose);
+            binding.fabDetailsDelete.startAnimation(fabClose);
 
             binding.fabDetailsShare.setClickable(false);
             binding.fabDetailsDownload.setClickable(false);
+            binding.fabDetailsDelete.setClickable(false);
 
             isOpen = false;
         } else {
             binding.fabMainDetails.startAnimation(rotatebackward);
             binding.fabDetailsShare.startAnimation(fabOpen);
             binding.fabDetailsDownload.startAnimation(fabOpen);
+            binding.fabDetailsDelete.startAnimation(fabOpen);
 
             binding.fabDetailsShare.setClickable(true);
             binding.fabDetailsDownload.setClickable(true);
+            binding.fabDetailsDelete.setClickable(true);
 
             isOpen = true;
         }
     }
 
-    private void showPermission()
-    {
-        // permission for 23 to 29 SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(ContextCompat.checkSelfPermission(VideoDetailActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(VideoDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(VideoDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
-            }
-        }
-    }
-
-    private boolean checkPermission() {
-
-        int write = ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int read = ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        return write == PackageManager.PERMISSION_GRANTED &&
-                read == PackageManager.PERMISSION_GRANTED;
-
-    }
 
 
 }

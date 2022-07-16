@@ -40,7 +40,7 @@
                     tools:layout_editor_absoluteY="21dp" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/txHeading"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="serif"

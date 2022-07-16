@@ -3,8 +3,9 @@ package com.itcraftsolution.statussaverforwhatsappdownload.Models;
 import android.net.Uri;
 
 import java.io.File;
+import java.util.Comparator;
 
-public class Statues {
+public class Statues  {
 
     private String name , path ;
     private Uri uri;
@@ -49,4 +50,5 @@ public class Statues {
     public void setUri(Uri uri) {
         this.uri = uri;
     }
+
 }

@@ -8,6 +8,7 @@ import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.os.Environment;
 import android.os.storage.StorageManager;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -45,9 +47,14 @@ import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.HomeTabVIewPag
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog;
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog_Privacy;
 import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.SaveFragment;
+import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
+import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityMainBinding;
 
 import org.w3c.dom.Document;
+
+import java.io.File;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     private ReviewManager manager;
     private boolean isGranted = false;
     private HomeTabVIewPagerAdapter adapter;
+    private SharedPreferences spf;
+    private boolean isPermissionGranted = false;
     private String [] tabTitles = new String[]{"IMAGES" , "VIDEOS","SAVED"};
     private ActivityResultLauncher<Intent> launcher;
 
@@ -67,30 +76,25 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        toolbar = findViewById(R.id.toolbar);
+        spf = getSharedPreferences("FolderPermission", MODE_PRIVATE);
+        isPermissionGranted = spf.getBoolean("isGranted", false);
 
-        toolbar.setTitle("Status Saver for Whatsapp");
-        setSupportActionBar(toolbar);
+        if(!isPermissionGranted)
+        {
+            binding.storagePermission.getRoot().setVisibility(View.VISIBLE);
+        }else {
+            loadData();
+        }
 
-        adapter = new HomeTabVIewPagerAdapter(MainActivity.this);
-        binding.vpHome.setAdapter(adapter);
-
-        new TabLayoutMediator(binding.tabHomeLayout, binding.vpHome,(((tab, position) -> tab.setText(tabTitles[position])))).attach();
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout, toolbar , R.string.OpenDrawer , R.string.CloseDrawer);
-        binding.drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        binding.navView.setItemIconTintList(null);
         binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 switch (item.getItemId())
                 {
-                    case R.id.menuSaved:
-                                    savedStatus();
-                                    break;
+//                    case R.id.menuSaved:
+//                                    savedStatus();
+//                                    break;
                     case R.id.menuHowUse:
                                     howToUse();
                                     break;
@@ -114,6 +118,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        binding.storagePermission.btnPermission.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                folderPermission();
+            }
+        });
+
+
+
+
+
+
+
+
+
 //        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
 //            @Override
 //            public void onActivityResult(ActivityResult result) {
@@ -134,6 +153,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void loadData()
+    {
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Status Saver for Whatsapp");
+        setSupportActionBar(toolbar);
+
+        adapter = new HomeTabVIewPagerAdapter(MainActivity.this);
+        binding.vpHome.setAdapter(adapter);
+
+        new TabLayoutMediator(binding.tabHomeLayout, binding.vpHome,(((tab, position) -> tab.setText(tabTitles[position])))).attach();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout, toolbar , R.string.OpenDrawer , R.string.CloseDrawer);
+        binding.drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        binding.navView.setItemIconTintList(null);
+    }
 //    private void showPermission()
 //    {
 //        // permission for 23 to 29 SDK
@@ -247,13 +283,17 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void savedStatus()
-    {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frMainContainer , new SaveFragment());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
+//    private void savedStatus()
+//    {
+//        binding.vpHome.setVisibility(View.GONE);
+//        binding.cardView.setVisibility(View.GONE);
+//        binding.tabHomeLayout.setVisibility(View.GONE);
+//        binding.frMainContainer.setVisibility(View.VISIBLE);
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.replace(R.id.frMainContainer , new SaveFragment());
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+//    }
 
     @Override
     public void onBackPressed() {
@@ -285,5 +325,71 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public void folderPermission()
+    {
+        String targetUri = null;
+        if(Utils.STATUS_DIRECTORY_GBWHATSAPP.exists())
+        {
+            targetUri = "GBWhatsApp%2FMedia%2F.Statuses";
+        }else if(Utils.STATUS_DIRECTORY_NEW.exists())
+        {
+            targetUri = "Android%2Fmedia%2Fcom.whatsapp%2FWhatsApp%2FMedia%2F.Statuses";
+        }else if(Utils.STATUS_DIRECTORY.exists()){
+            targetUri = "WhatsApp%2FMedia%2F.Statuses";
+        }else{
+            Toast.makeText(MainActivity.this, "Can't Find Directory!!", Toast.LENGTH_SHORT).show();
+        }
+        StorageManager storageManager = (StorageManager) getSystemService(Context.STORAGE_SERVICE);
+        Intent intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
 
+        Uri uri = intent.getParcelableExtra("android.provider.extra.INITIAL_URI");
+        String scheme = uri.toString();
+        scheme = scheme.replace("/root/", "/tree/");
+        scheme = scheme + "%3A" + targetUri;
+
+        uri = Uri.parse(scheme);
+        intent.putExtra("android.provider.extra.INITIAL_URI", uri);
+        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+        startActivityForResult(intent,6);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK)
+        {
+            if(data != null)
+            {
+                Uri treeUri = data.getData();
+                getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                DocumentFile documentFile = DocumentFile.fromTreeUri(MainActivity.this, treeUri);
+
+
+                SharedPreferences.Editor edit = spf.edit();
+                edit.putBoolean("isGranted", true);
+                edit.putString("PATH", treeUri.toString());
+                edit.apply();
+
+                binding.storagePermission.getRoot().setVisibility(View.GONE);
+                loadData();
+//                DocumentFile[] documentFiles = documentFile.listFiles();
+//                for (int i = 0; i < documentFiles.length; i++) {
+//                    documentFiles[i].getUri().toString();
+//                    DocumentFile singlefile = documentFiles[i];
+//
+//                    if (singlefile.getUri().toString().endsWith(".png") || singlefile.getUri().toString().endsWith(".jpg")) {
+//                        File file = new File(singlefile.getUri().toString());
+//                        Date date = new Date(file.lastModified());
+//
+//                        model = new Statues("whats " + i, documentFiles[i].getName(), file, singlefile.getUri());
+//                        list.add(model);
+//                    }
+//                }
+//                setupRecyclerview(list);
+            }
+        }
+    }
 }

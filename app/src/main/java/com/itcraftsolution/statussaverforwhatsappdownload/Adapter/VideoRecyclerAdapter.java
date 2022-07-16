@@ -24,7 +24,6 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
 
     Context context;
     ArrayList<Statues> list;
-    String saveFilePath = Utils.RootDirectorywhatsapp+"/";
 
     public VideoRecyclerAdapter(Context context, ArrayList<Statues> list) {
         this.context = context;
@@ -47,21 +46,17 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
         holder.binding.btnDownloadResent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.copyFile(model , context);
+                Utils.saveImgIntoGallery(context, model);
             }
         });
 
         holder.binding.igResentSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                SharedPreferences spf = context.getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit = spf.edit();
-                edit.putString("URI", model.getUri().toString());
-                edit.putString("FILE_PATH", model.getFilename().getAbsolutePath());
-                edit.apply();
-
                 Intent intent = new Intent(context, VideoDetailActivity.class);
+                intent.putExtra("URI", model.getUri().toString());
+                intent.putExtra("FILE_PATH", model.getFilename().getAbsolutePath());
+
                 context.startActivity(intent);
             }
         });
@@ -81,4 +76,5 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
             binding = SampleResentBinding.bind(itemView);
         }
     }
+
 }

@@ -55,19 +55,18 @@ public class SavedRecyclerAdapter extends RecyclerView.Adapter<SavedRecyclerAdap
             @Override
             public void onClick(View v) {
 
-                SharedPreferences spf = context.getSharedPreferences("SendDetails", Context.MODE_PRIVATE);
-                SharedPreferences.Editor edit = spf.edit();
-                edit.putString("URI", model.getUri().toString());
-                edit.putString("FILE_PATH", model.getFilename().getAbsolutePath());
-                edit.putBoolean("isSaved" , true);
-                edit.apply();
-
                 if(model.getFilename().getName().endsWith(".mp4"))
                 {
                     Intent intent = new Intent(context, VideoDetailActivity.class);
+                    intent.putExtra("URI", model.getUri().toString());
+                    intent.putExtra("FILE_PATH", model.getFilename().getAbsolutePath());
+                    intent.putExtra("isSaved", true);
                     context.startActivity(intent);
                 }else {
                     Intent intent = new Intent(context, ImageDetailActivity.class);
+                    intent.putExtra("URI", model.getUri().toString());
+                    intent.putExtra("FILE_PATH", model.getFilename().getAbsolutePath());
+                    intent.putExtra("isSaved", true);
                     context.startActivity(intent);
                 }
             }

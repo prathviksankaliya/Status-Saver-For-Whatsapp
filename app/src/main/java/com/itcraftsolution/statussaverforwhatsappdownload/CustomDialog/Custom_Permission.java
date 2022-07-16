@@ -22,17 +22,18 @@ public class Custom_Permission extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.storage_dialog);
-        btn = findViewById(R.id.btnPermission);
+        btn = findViewById(R.id.btnOk);
 
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dismiss();
+
                 SharedPreferences spf = getContext().getSharedPreferences("Permission" , Context.MODE_PRIVATE);
                 SharedPreferences.Editor edit = spf.edit();
                 edit.putBoolean("Allow" , true);
                 edit.apply();
+                dismiss();
             }
         });
 

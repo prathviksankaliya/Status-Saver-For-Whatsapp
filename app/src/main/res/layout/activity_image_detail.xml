@@ -34,6 +34,22 @@
         app:layout_constraintStart_toStartOf="@+id/fabDetailsShare"
         app:maxImageSize="40dp" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabDetailsDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:backgroundTint="@color/white"
+        android:contentDescription="@string/app_name"
+        android:elevation="20dp"
+        android:src="@drawable/ic_baseline_delete_24"
+        android:visibility="gone"
+        app:borderWidth="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/fabDetailsShare"
+        app:layout_constraintEnd_toEndOf="@+id/fabDetailsShare"
+        app:layout_constraintStart_toStartOf="@+id/fabDetailsShare"
+        app:maxImageSize="40dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabDetailsShare"
