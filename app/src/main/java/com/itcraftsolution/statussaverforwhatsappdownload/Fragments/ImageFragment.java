@@ -1,23 +1,15 @@
 package com.itcraftsolution.statussaverforwhatsappdownload.Fragments;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -27,30 +19,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Environment;
-import android.os.storage.StorageManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ImageRecyclerAdapter;
-import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.VideoRecyclerAdapter;
-import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog;
-import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Permission;
-import com.itcraftsolution.statussaverforwhatsappdownload.ImageDetailActivity;
-import com.itcraftsolution.statussaverforwhatsappdownload.MainActivity;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
-import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentImageBinding;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 public class ImageFragment extends Fragment {
 
@@ -221,30 +200,7 @@ public class ImageFragment extends Fragment {
 //            }
 //        }
 //    }
-//    private void showPermission()
-//    {
-//        // permission for 23 to 29 SDK
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-//        {
-//            if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-//                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-//            {
-//                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
-//            }
-//        }
-//    }
-//
-//    private boolean checkPermission() {
-//
-//        int write = ContextCompat.checkSelfPermission(requireContext(),
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        int read = ContextCompat.checkSelfPermission(requireContext(),
-//                Manifest.permission.READ_EXTERNAL_STORAGE);
-//
-//        return write == PackageManager.PERMISSION_GRANTED &&
-//                read == PackageManager.PERMISSION_GRANTED;
-//
-//    }
+
     private void setupRecyclerview(ArrayList<Statues> statusList)
     {
         if(statusList.isEmpty())
@@ -304,6 +260,33 @@ public class ImageFragment extends Fragment {
 
         return write == PackageManager.PERMISSION_GRANTED &&
                 read == PackageManager.PERMISSION_GRANTED;
+
+    }
+    private void loadData(File file) {
+
+        Statues model;
+
+        File[] allfiles = file.listFiles();
+
+        Arrays.sort(allfiles, ((o1, o2) -> {
+            if (o1.lastModified() > o2.lastModified()) {
+                return -1;
+            } else if (o1.lastModified() < o2.lastModified()) {
+                return +1;
+            } else {
+                return 0;
+            }
+        }));
+
+        for (int i = 0; i < allfiles.length; i++) {
+            File singlefile = allfiles[i];
+
+            if (Uri.fromFile(singlefile).toString().endsWith(".png") || Uri.fromFile(singlefile).toString().endsWith(".jpg")) {
+                model = new Statues("whats " + i, allfiles[i].getAbsolutePath(), singlefile, Uri.fromFile(singlefile));
+
+                list.add(model);
+            }
+        }
 
     }
 

@@ -1,11 +1,11 @@
 package com.itcraftsolution.statussaverforwhatsappdownload;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityVideoDetailBinding;
@@ -101,10 +100,14 @@ public class VideoDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
+                if(!checkPermission())
+                {
+                    showPermission();
+                }else{
                     File file = new File(filepath);
                     Statues status = new Statues(file.getName() , filepath , file , uri);
                     Utils.saveImgIntoGallery( VideoDetailActivity.this, status);
+                }
             }
         });
     }
@@ -164,6 +167,30 @@ public class VideoDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void showPermission()
+    {
+        // permission for 23 to 29 SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(ContextCompat.checkSelfPermission(VideoDetailActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(VideoDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(VideoDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+            }
+        }
+    }
+
+    private boolean checkPermission() {
+
+        int write = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int read = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        return write == PackageManager.PERMISSION_GRANTED &&
+                read == PackageManager.PERMISSION_GRANTED;
+
+    }
 
 
 }

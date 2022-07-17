@@ -1,13 +1,10 @@
 package com.itcraftsolution.statussaverforwhatsappdownload;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,7 +34,6 @@ public class ImageDetailActivity extends AppCompatActivity {
     private boolean isOpen = false;
     private boolean isSaved;
     private Uri uri;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,14 +100,15 @@ public class ImageDetailActivity extends AppCompatActivity {
         binding.fabDetailsDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-//                    BitmapDrawable bitmapDrawable = (BitmapDrawable) binding.FullSizeImage.getDrawable();
-//                    Bitmap bitmap = bitmapDrawable.getBitmap();
-//                    Utils.saveImgIntoGallery(ImageDetailActivity.this, bitmap);
+                if(!checkPermission())
+                {
+                    showPermission();
+                }else{
                     File file = new File(filepath);
                     Statues status = new Statues(file.getName() , filepath , file , uri);
                     Utils.saveImgIntoGallery( ImageDetailActivity.this, status);
+                }
+
 
             }
         });
@@ -163,4 +160,28 @@ public class ImageDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void showPermission()
+    {
+        // permission for 23 to 29 SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(ContextCompat.checkSelfPermission(ImageDetailActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(ImageDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(ImageDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+            }
+        }
+    }
+
+    private boolean checkPermission() {
+
+        int write = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int read = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        return write == PackageManager.PERMISSION_GRANTED &&
+                read == PackageManager.PERMISSION_GRANTED;
+
+    }
 }

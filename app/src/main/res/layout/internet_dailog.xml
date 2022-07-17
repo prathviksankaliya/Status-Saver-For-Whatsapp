@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    app:cardCornerRadius="@dimen/_12mdp"
+    app:cardElevation="@dimen/_8mdp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        >
+
+    <ImageView
+        android:layout_width="@dimen/_100mdp"
+        android:layout_height="@dimen/_100mdp"
+        android:src="@drawable/ic_baseline_signal_wifi_off_24"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OOPS!"
+        android:gravity="center"
+        android:fontFamily="serif"
+        android:textSize="@dimen/_31font_mdp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No Internet Connection"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_8mdp"
+        android:fontFamily="serif"
+        android:textSize="@dimen/_20font_mdp"
+        android:textColor="@color/black"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please Check Your Connection"
+        android:gravity="center"
+        android:fontFamily="serif"
+        android:textSize="@dimen/_13font_mdp"
+        android:textColor="@color/black"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnRetry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_50mdp"
+        android:layout_marginHorizontal="@dimen/_50mdp"
+        android:background="@drawable/btn_shape"
+        android:padding="@dimen/_10mdp"
+        android:textSize="@dimen/_14font_mdp"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:text="Retry"
+        android:textColor="@color/black"
+        android:layout_marginVertical="@dimen/_24mdp"
+        />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

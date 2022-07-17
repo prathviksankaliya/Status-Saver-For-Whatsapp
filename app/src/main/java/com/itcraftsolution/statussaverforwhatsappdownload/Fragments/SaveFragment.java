@@ -38,6 +38,7 @@ public class SaveFragment extends Fragment {
     private ArrayList<Statues> list;
     private SavedRecyclerAdapter adapter;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -1,13 +1,12 @@
 package com.itcraftsolution.statussaverforwhatsappdownload;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
-
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.HomeFragment;
 
 public class SpalshActivity extends AppCompatActivity {
 

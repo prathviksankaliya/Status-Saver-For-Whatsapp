@@ -1,40 +1,27 @@
 package com.itcraftsolution.statussaverforwhatsappdownload;
 
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.os.Build.VERSION.SDK_INT;
-
-import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.storage.StorageManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -46,15 +33,8 @@ import com.google.android.play.core.tasks.Task;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.HomeTabVIewPagerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog;
 import com.itcraftsolution.statussaverforwhatsappdownload.CustomDialog.Custom_Dialog_Privacy;
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.SaveFragment;
-import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityMainBinding;
-
-import org.w3c.dom.Document;
-
-import java.io.File;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -124,14 +104,6 @@ public class MainActivity extends AppCompatActivity {
                 folderPermission();
             }
         });
-
-
-
-
-
-
-
-
 
 //        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
 //            @Override

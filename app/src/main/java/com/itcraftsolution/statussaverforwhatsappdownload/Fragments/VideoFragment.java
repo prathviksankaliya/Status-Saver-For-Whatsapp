@@ -37,6 +37,7 @@ public class VideoFragment extends Fragment {
     private boolean isFolderPermissionGranted;
     private String istreeUri;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
