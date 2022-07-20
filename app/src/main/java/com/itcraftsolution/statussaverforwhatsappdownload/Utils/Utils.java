@@ -209,7 +209,7 @@ public class Utils {
             try{
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), statues.getUri());
                 mediaFile = new File(STATUS_SAVER_DIR + File.separator + fileName);
-                if(Build.VERSION.SDK_INT == Build.VERSION_CODES.R || Build.VERSION.SDK_INT == Build.VERSION_CODES.Q)
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 {
                     contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
                     contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
@@ -217,6 +217,7 @@ public class Utils {
                     Uri imageUri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                     fos = (FileOutputStream) context.getContentResolver().openOutputStream(imageUri);
                 }else{
+                    Toast.makeText(context, "else part Image", Toast.LENGTH_SHORT).show();
                     if (!STATUS_SAVER_DIR.exists()) {
                         if (!STATUS_SAVER_DIR.mkdirs()) {
                             Toast.makeText(context, "Something went wrong !!", Toast.LENGTH_SHORT).show();

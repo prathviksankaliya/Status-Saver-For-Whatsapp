@@ -109,13 +109,14 @@ public class VideoDetailActivity extends AppCompatActivity {
                 {
                     showPermission();
                 }else{
-//                    Log.d("StatusSaverInfo", VideoUri);
-//                    Log.d("StatusSaverInfo", filepath);
-//                    Log.d("StatusSaverInfo", String.valueOf(uri));
                     File file = new File( filepath);
                     Statues status = new Statues(file.getPath(), filepath , file , uri);
-//                    Utils.saveImgIntoGallery( VideoDetailActivity.this, status);
-                    Utils.copyFile(status, VideoDetailActivity.this);
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    {
+                        Utils.saveImgIntoGallery( VideoDetailActivity.this, status);
+                    }else{
+                        Utils.copyFile(status, VideoDetailActivity.this);
+                    }
                 }
             }
         });

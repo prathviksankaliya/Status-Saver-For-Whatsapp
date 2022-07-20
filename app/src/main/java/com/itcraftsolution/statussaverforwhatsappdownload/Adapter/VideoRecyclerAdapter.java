@@ -3,6 +3,7 @@ package com.itcraftsolution.statussaverforwhatsappdownload.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,21 +52,13 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
         holder.binding.btnDownloadResent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Utils.saveImgIntoGallery(context, model);
-//                if (!Utils.STATUS_SAVER_DIR.exists()) {
-//                    if (!Utils.STATUS_SAVER_DIR.mkdirs()) {
-//                        Toast.makeText(context, "Something went wrong !!", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//                final String path = model.getPath();
-//                final File file = new File(path);
-//                File destFile = new File(saveFilePath);
-//                try {
-//                    FileUtils.copyFileToDirectory(file, destFile);
-//                }catch (Exception e)
-//                {
-//                    Toast.makeText(context, ""+ e.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                {
+                    Utils.saveImgIntoGallery( context, model);
+                }else{
+                    Utils.copyFile(model, context);
+                }
             }
         });
 

@@ -3,12 +3,14 @@ package com.itcraftsolution.statussaverforwhatsappdownload.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -42,9 +44,10 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
 
         Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
         holder.binding.btnDownloadResent.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-//                Utils.saveImgIntoGallery(context, model);
+                Utils.saveImgIntoGallery(context, model);
             }
         });
 

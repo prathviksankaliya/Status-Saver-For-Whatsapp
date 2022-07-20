@@ -108,17 +108,9 @@ public class ImageDetailActivity extends AppCompatActivity {
                 {
                     showPermission();
                 }else{
-////                    File file = new File("file://" + ImageUri);
                     File file = new File(ImageUri);
-////                    Log.d("StatusSaverInfo", "file://" + ImageUri);
-////                    Log.d("StatusSaverInfo", "file://" + filepath);
-////                    Log.d("StatusSaverInfo", String.valueOf(uri));
-////                    Log.d("StatusSaverInfo", file.getPath());
-////                    Log.d("StatusSaverInfo", file.getAbsolutePath());
-
                     Statues status = new Statues(file.getName() , filepath , file , uri);
                     Utils.saveImgIntoGallery( ImageDetailActivity.this, status);
-
 //                    Utils.copyFile(status, ImageDetailActivity.this);
                 }
             }
