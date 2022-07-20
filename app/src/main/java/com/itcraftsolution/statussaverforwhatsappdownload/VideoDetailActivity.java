@@ -10,16 +10,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.MediaController;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.util.Util;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityVideoDetailBinding;
@@ -96,7 +99,9 @@ public class VideoDetailActivity extends AppCompatActivity {
                 startActivity(Intent.createChooser(shareIntent, "Share Statues"));
             }
         });
+
         binding.fabDetailsDownload.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onClick(View v) {
 
@@ -104,9 +109,13 @@ public class VideoDetailActivity extends AppCompatActivity {
                 {
                     showPermission();
                 }else{
-                    File file = new File(filepath);
-                    Statues status = new Statues(file.getName() , filepath , file , uri);
-                    Utils.saveImgIntoGallery( VideoDetailActivity.this, status);
+//                    Log.d("StatusSaverInfo", VideoUri);
+//                    Log.d("StatusSaverInfo", filepath);
+//                    Log.d("StatusSaverInfo", String.valueOf(uri));
+                    File file = new File( filepath);
+                    Statues status = new Statues(file.getPath(), filepath , file , uri);
+//                    Utils.saveImgIntoGallery( VideoDetailActivity.this, status);
+                    Utils.copyFile(status, VideoDetailActivity.this);
                 }
             }
         });

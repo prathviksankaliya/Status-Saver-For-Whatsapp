@@ -4,16 +4,19 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -98,18 +101,26 @@ public class ImageDetailActivity extends AppCompatActivity {
         });
 
         binding.fabDetailsDownload.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onClick(View v) {
                 if(!checkPermission())
                 {
                     showPermission();
                 }else{
-                    File file = new File(filepath);
+////                    File file = new File("file://" + ImageUri);
+                    File file = new File(ImageUri);
+////                    Log.d("StatusSaverInfo", "file://" + ImageUri);
+////                    Log.d("StatusSaverInfo", "file://" + filepath);
+////                    Log.d("StatusSaverInfo", String.valueOf(uri));
+////                    Log.d("StatusSaverInfo", file.getPath());
+////                    Log.d("StatusSaverInfo", file.getAbsolutePath());
+
                     Statues status = new Statues(file.getName() , filepath , file , uri);
                     Utils.saveImgIntoGallery( ImageDetailActivity.this, status);
+
+//                    Utils.copyFile(status, ImageDetailActivity.this);
                 }
-
-
             }
         });
 

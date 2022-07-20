@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.documentfile.provider.DocumentFile;
@@ -47,10 +48,15 @@ public class VideoFragment extends Fragment {
 
 
         list = new ArrayList<>();
-        spf = requireContext().getSharedPreferences("FolderPermission", Context.MODE_PRIVATE);
 
-        isFolderPermissionGranted = spf.getBoolean("isGranted", false);
-        istreeUri = spf.getString("PATH", null);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+        {
+            Toast.makeText(requireContext(), "android 11 or up", Toast.LENGTH_SHORT).show();
+
+            spf = requireContext().getSharedPreferences("FolderPermission", Context.MODE_PRIVATE);
+
+            isFolderPermissionGranted = spf.getBoolean("isGranted", false);
+            istreeUri = spf.getString("PATH", null);
 
 
             if(istreeUri != null)
@@ -74,7 +80,25 @@ public class VideoFragment extends Fragment {
                 }
                 setupRecyclerview(list);
             }
+        }else {
+            Toast.makeText(requireContext(), "android 10 and low", Toast.LENGTH_SHORT).show();
 
+                if (Utils.STATUS_DIRECTORY.exists()) {
+                    loadData(Utils.STATUS_DIRECTORY);
+
+                } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
+
+                    loadData(Utils.STATUS_DIRECTORY_NEW);
+
+                } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
+
+                    loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
+
+                } else {
+                    Toast.makeText(requireContext(), "up Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+                }
+
+        }
 
         if(list.isEmpty())
         {
@@ -88,10 +112,39 @@ public class VideoFragment extends Fragment {
         }
         return binding.getRoot();
     }
+
     private void setupRecyclerview(ArrayList<Statues> statusList)
         {
             adapter = new VideoRecyclerAdapter(requireContext(), statusList);
             binding.rvVideo.setAdapter(adapter);
             binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
         }
+
+    private void loadData(File file) {
+
+        Statues model;
+
+        File[] allfiles = file.listFiles();
+
+        Arrays.sort(allfiles, ((o1, o2) -> {
+            if (o1.lastModified() > o2.lastModified()) {
+                return -1;
+            } else if (o1.lastModified() < o2.lastModified()) {
+                return +1;
+            } else {
+                return 0;
+            }
+        }));
+
+        for (int i = 0; i < allfiles.length; i++) {
+            File singlefile = allfiles[i];
+
+            if (Uri.fromFile(singlefile).toString().endsWith(".mp4")) {
+                model = new Statues("whats " + i, allfiles[i].getAbsolutePath(), singlefile, Uri.fromFile(singlefile));
+
+                list.add(model);
+            }
+        }
+        setupRecyclerview(list);
+    }
 }

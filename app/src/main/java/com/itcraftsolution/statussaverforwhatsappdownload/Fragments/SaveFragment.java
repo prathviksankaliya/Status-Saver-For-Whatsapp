@@ -54,7 +54,6 @@ public class SaveFragment extends Fragment {
         if (Utils.STATUS_SAVER_DIR.exists()) {
 
             getData(Utils.STATUS_SAVER_DIR);
-            setRecyclerView(list);
 
         }  else {
             binding.savedRefershView.setRefreshing(false);
@@ -71,7 +70,6 @@ public class SaveFragment extends Fragment {
                     binding.rvSaved.setVisibility(View.VISIBLE);
                     list.clear();
                     getData(Utils.STATUS_SAVER_DIR);
-                    setRecyclerView(list);
                 }
                 binding.savedRefershView.setRefreshing(false);
 
@@ -117,7 +115,7 @@ public class SaveFragment extends Fragment {
                 list.add(model);
             }
         }
-
+            setRecyclerView(list);
     }
 
     private void setRecyclerView(ArrayList<Statues> statues)

@@ -44,7 +44,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         holder.binding.btnDownloadResent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.saveImgIntoGallery(context, model);
+//                Utils.saveImgIntoGallery(context, model);
             }
         });
 

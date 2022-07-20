@@ -1,9 +1,11 @@
 package com.itcraftsolution.statussaverforwhatsappdownload;
 
+import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +23,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.google.android.material.navigation.NavigationView;
@@ -56,13 +60,22 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        spf = getSharedPreferences("FolderPermission", MODE_PRIVATE);
-        isPermissionGranted = spf.getBoolean("isGranted", false);
-
-        if(!isPermissionGranted)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
         {
-            binding.storagePermission.getRoot().setVisibility(View.VISIBLE);
-        }else {
+            spf = getSharedPreferences("FolderPermission", MODE_PRIVATE);
+            isPermissionGranted = spf.getBoolean("isGranted", false);
+
+            if(!isPermissionGranted)
+            {
+                binding.storagePermission.getRoot().setVisibility(View.VISIBLE);
+            }else {
+                loadData();
+            }
+        }else{
+            if(!checkPermission())
+            {
+                showPermission();
+            }
             loadData();
         }
 
@@ -142,30 +155,31 @@ public class MainActivity extends AppCompatActivity {
 
         binding.navView.setItemIconTintList(null);
     }
-//    private void showPermission()
-//    {
-//        // permission for 23 to 29 SDK
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-//        {
-//            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-//                    ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-//            {
-//                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
-//            }
-//        }
-//    }
-//
-//    private boolean checkPermission() {
-//
-//        int write = ContextCompat.checkSelfPermission(getApplicationContext(),
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        int read = ContextCompat.checkSelfPermission(getApplicationContext(),
-//                Manifest.permission.READ_EXTERNAL_STORAGE);
-//
-//        return write == PackageManager.PERMISSION_GRANTED &&
-//                read == PackageManager.PERMISSION_GRANTED;
-//
-//    }
+
+    private void showPermission()
+    {
+        // permission for 23 to 29 SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+            }
+        }
+    }
+
+    private boolean checkPermission() {
+
+        int write = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int read = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        return write == PackageManager.PERMISSION_GRANTED &&
+                read == PackageManager.PERMISSION_GRANTED;
+
+    }
 
 
     private void shareApp()

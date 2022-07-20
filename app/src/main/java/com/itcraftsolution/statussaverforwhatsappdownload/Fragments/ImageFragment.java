@@ -22,9 +22,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ImageRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
+import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.FragmentImageBinding;
 
 import java.io.File;
@@ -52,84 +54,98 @@ public class ImageFragment extends Fragment {
         dialog.setMessage("Statuses Loading ....");
         dialog.setCancelable(false);
 
-
         list = new ArrayList<>();
 
-        if(!checkPermission())
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
         {
-            showPermission();
+            Toast.makeText(requireContext(), "android 11 or up", Toast.LENGTH_SHORT).show();
+            spf = requireContext().getSharedPreferences("FolderPermission", Context.MODE_PRIVATE);
+
+            isFolderPermissionGranted = spf.getBoolean("isGranted", false);
+
+            istreeUri = spf.getString("PATH", null);
+
+            if(isFolderPermissionGranted)
+            {
+                getData();
+            }
+        }else {
+            Toast.makeText(requireContext(), "android 10 and low", Toast.LENGTH_SHORT).show();
+            if(!checkPermission())
+            {
+                showPermission();
+            }else {
+                if (Utils.STATUS_DIRECTORY.exists()) {
+                loadData(Utils.STATUS_DIRECTORY);
+
+            } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
+
+                loadData(Utils.STATUS_DIRECTORY_NEW);
+
+            } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
+
+                loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
+
+            } else {
+                    binding.imageRefershView.setRefreshing(false);
+                    Toast.makeText(requireContext(), "up Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
-        spf = requireContext().getSharedPreferences("FolderPermission", Context.MODE_PRIVATE);
 
-        isFolderPermissionGranted = spf.getBoolean("isGranted", false);
 
-        istreeUri = spf.getString("PATH", null);
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//        {
+//            if (Utils.STATUS_DIRECTORY.exists()) {
+//                loadData(Utils.STATUS_DIRECTORY);
+//                dialog.dismiss();
+//
+//            } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
+//
+//                loadData(Utils.STATUS_DIRECTORY_NEW);
+//                dialog.dismiss();
+//
+//            } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
+//
+//                loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
+//                dialog.dismiss();
+//
+//            } else {
+//                binding.imageRefershView.setRefreshing(false);
+//                dialog.dismiss();
+//                Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+//            }
+//        }else{
 
-        if(isFolderPermissionGranted)
-        {
-           getData();
-        }
+//        }
+
         binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    dialog.show();
-                    getData();
-                    binding.imageRefershView.setRefreshing(false);
-                    dialog.dismiss();
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                    {
+                        dialog.show();
+                        getData();
+                        binding.imageRefershView.setRefreshing(false);
+                        dialog.dismiss();
+                    }else{
+                        dialog.show();
+                        list = new ArrayList<>();
+                        if(Utils.STATUS_DIRECTORY.exists())
+                        {
+                            loadData(Utils.STATUS_DIRECTORY);
+                        }else if (Utils.STATUS_DIRECTORY_NEW.exists()){
+                            loadData(Utils.STATUS_DIRECTORY_NEW);
+                        }else if(Utils.STATUS_DIRECTORY_GBWHATSAPP.exists())
+                        {
+                            loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
+                        }
+                        binding.imageRefershView.setRefreshing(false);
+                        dialog.dismiss();
+                    }
                 }
             });
-//        if (Utils.STATUS_DIRECTORY.exists()) {
-//
-//            getData(Utils.STATUS_DIRECTORY);
-//            dialog.dismiss();
-//            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                @Override
-//                public void onRefresh() {
-//                    dialog.show();
-//                    list = new ArrayList<>();
-//                    getData(Utils.STATUS_DIRECTORY);
-//                    binding.imageRefershView.setRefreshing(false);
-//                    adapter.notifyDataSetChanged();
-//                    dialog.dismiss();
-//                }
-//            });
-//
-//        } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
-//
-//            getData(Utils.STATUS_DIRECTORY_NEW);
-//            dialog.dismiss();
-//            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                @Override
-//                public void onRefresh() {
-//                    dialog.show();
-//                    list = new ArrayList<>();
-//                    getData(Utils.STATUS_DIRECTORY_NEW);
-//                    binding.imageRefershView.setRefreshing(false);
-//                    adapter.notifyDataSetChanged();
-//                    dialog.dismiss();
-//                }
-//            });
-//
-//        } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
-//
-//            getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
-//            dialog.dismiss();
-//            binding.imageRefershView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                @Override
-//                public void onRefresh() {
-//                    dialog.show();
-//                    list = new ArrayList<>();
-//                    getData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
-//                    binding.imageRefershView.setRefreshing(false);
-//                    adapter.notifyDataSetChanged();
-//                    dialog.dismiss();
-//                }
-//            });
-//        } else {
-//            binding.imageRefershView.setRefreshing(false);
-//            dialog.dismiss();
-//            Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
-//        }
+
 
         return binding.getRoot();
     }
@@ -208,6 +224,7 @@ public class ImageFragment extends Fragment {
             binding.rvImage.setVisibility(View.GONE);
             binding.VNotFoundImage.setVisibility(View.VISIBLE);
         }else {
+//            binding.rvImage.setVisibility(View.VISIBLE);
             adapter = new ImageRecyclerAdapter(requireContext(), statusList);
             binding.rvImage.setAdapter(adapter);
             binding.rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
@@ -287,7 +304,30 @@ public class ImageFragment extends Fragment {
                 list.add(model);
             }
         }
-
+        setupRecyclerview(list);
     }
 
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if(!checkPermission())
+//        {
+//            showPermission();
+//        }else{
+//            if (Utils.STATUS_DIRECTORY.exists()) {
+//                loadData(Utils.STATUS_DIRECTORY);
+//
+//            } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
+//
+//                loadData(Utils.STATUS_DIRECTORY_NEW);
+//
+//            } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
+//
+//                loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
+//            } else {
+//                binding.imageRefershView.setRefreshing(false);
+//                Toast.makeText(requireContext(), "up Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//    }
 }
