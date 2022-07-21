@@ -8,14 +8,6 @@
     tools:openDrawer="left"
     tools:context=".MainActivity">
 
-   <include
-       android:id="@+id/storagePermission"
-       layout="@layout/storage_dialog"
-       android:visibility="gone"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-
-       />
    <androidx.constraintlayout.widget.ConstraintLayout
        android:layout_width="match_parent"
        android:layout_height="wrap_content">

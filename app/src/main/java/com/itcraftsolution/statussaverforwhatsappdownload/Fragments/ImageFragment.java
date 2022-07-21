@@ -146,6 +146,11 @@ public class ImageFragment extends Fragment {
                 }
             });
 
+        if(list.isEmpty())
+        {
+            binding.rvImage.setVisibility(View.GONE);
+            binding.VNotFoundImage.setVisibility(View.VISIBLE);
+        }
 
         return binding.getRoot();
     }
@@ -219,16 +224,9 @@ public class ImageFragment extends Fragment {
 
     private void setupRecyclerview(ArrayList<Statues> statusList)
     {
-        if(statusList.isEmpty())
-        {
-            binding.rvImage.setVisibility(View.GONE);
-            binding.VNotFoundImage.setVisibility(View.VISIBLE);
-        }else {
-//            binding.rvImage.setVisibility(View.VISIBLE);
             adapter = new ImageRecyclerAdapter(requireContext(), statusList);
             binding.rvImage.setAdapter(adapter);
             binding.rvImage.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
-        }
     }
 
     private void getData()
@@ -266,6 +264,7 @@ public class ImageFragment extends Fragment {
                 ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
             }
         }
+
     }
 
     private boolean checkPermission() {
@@ -330,4 +329,14 @@ public class ImageFragment extends Fragment {
 //            }
 //        }
 //    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(!checkPermission())
+        {
+            showPermission();
+        }
+    }
 }

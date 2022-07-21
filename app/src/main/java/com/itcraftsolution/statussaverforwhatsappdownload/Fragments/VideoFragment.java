@@ -1,12 +1,16 @@
 package com.itcraftsolution.statussaverforwhatsappdownload.Fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,7 +56,77 @@ public class VideoFragment extends Fragment {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
         {
             Toast.makeText(requireContext(), "android 11 or up", Toast.LENGTH_SHORT).show();
+            getData();
 
+        }else {
+            Toast.makeText(requireContext(), "android 10 and low", Toast.LENGTH_SHORT).show();
+            if(!checkPermission())
+            {
+                showPermission();
+            }else {
+                if (Utils.STATUS_DIRECTORY.exists()) {
+                    loadData(Utils.STATUS_DIRECTORY);
+
+                } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
+
+                    loadData(Utils.STATUS_DIRECTORY_NEW);
+
+                } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
+
+                    loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
+
+                } else {
+                    Toast.makeText(requireContext(), "up Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+
+        binding.refreshVideo.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                {
+                    getData();
+                }else{
+
+                    list = new ArrayList<>();
+                    if(Utils.STATUS_DIRECTORY.exists())
+                    {
+                        loadData(Utils.STATUS_DIRECTORY);
+                    }else if (Utils.STATUS_DIRECTORY_NEW.exists()){
+                        loadData(Utils.STATUS_DIRECTORY_NEW);
+                    }else if(Utils.STATUS_DIRECTORY_GBWHATSAPP.exists())
+                    {
+                        loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
+                    }
+
+                }
+                binding.refreshVideo.setRefreshing(false);
+            }
+        });
+        if(list.isEmpty())
+        {
+            binding.rvVideo.setVisibility(View.GONE);
+            binding.VNotFoundImage.setVisibility(View.VISIBLE);
+        }
+        else {
+            adapter = new VideoRecyclerAdapter(requireContext(), list);
+            binding.rvVideo.setAdapter(adapter);
+            binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
+        }
+        return binding.getRoot();
+    }
+
+    private void setupRecyclerview(ArrayList<Statues> statusList)
+        {
+            adapter = new VideoRecyclerAdapter(requireContext(), statusList);
+            binding.rvVideo.setAdapter(adapter);
+            binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
+        }
+
+        private void getData()
+        {
             spf = requireContext().getSharedPreferences("FolderPermission", Context.MODE_PRIVATE);
 
             isFolderPermissionGranted = spf.getBoolean("isGranted", false);
@@ -80,45 +154,9 @@ public class VideoFragment extends Fragment {
                 }
                 setupRecyclerview(list);
             }
-        }else {
-            Toast.makeText(requireContext(), "android 10 and low", Toast.LENGTH_SHORT).show();
-
-                if (Utils.STATUS_DIRECTORY.exists()) {
-                    loadData(Utils.STATUS_DIRECTORY);
-
-                } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
-
-                    loadData(Utils.STATUS_DIRECTORY_NEW);
-
-                } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
-
-                    loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
-
-                } else {
-                    Toast.makeText(requireContext(), "up Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
-                }
-
         }
 
-        if(list.isEmpty())
-        {
-            binding.rvVideo.setVisibility(View.GONE);
-            binding.VNotFoundImage.setVisibility(View.VISIBLE);
-        }
-        else {
-            adapter = new VideoRecyclerAdapter(requireContext(), list);
-            binding.rvVideo.setAdapter(adapter);
-            binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
-        }
-        return binding.getRoot();
-    }
 
-    private void setupRecyclerview(ArrayList<Statues> statusList)
-        {
-            adapter = new VideoRecyclerAdapter(requireContext(), statusList);
-            binding.rvVideo.setAdapter(adapter);
-            binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
-        }
 
     private void loadData(File file) {
 
@@ -146,5 +184,30 @@ public class VideoFragment extends Fragment {
             }
         }
         setupRecyclerview(list);
+    }
+    private void showPermission()
+    {
+        // permission for 23 to 29 SDK
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+            }
+        }
+
+    }
+
+    private boolean checkPermission() {
+
+        int write = ContextCompat.checkSelfPermission(requireContext().getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int read = ContextCompat.checkSelfPermission(requireContext().getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        return write == PackageManager.PERMISSION_GRANTED &&
+                read == PackageManager.PERMISSION_GRANTED;
+
     }
 }
