@@ -46,7 +46,7 @@ public class Utils {
             File.separator + Environment.DIRECTORY_PICTURES + File.separator + "/StatusSaverForWhatsapp/");
 
     public static File STATUS_DIRECTORY = new File(Environment.getExternalStorageDirectory() +
-            File.separator + "WhatsApp/Media/.Statuses");
+            File.separator + "/WhatsApp/Media/.Statuses");
 
 
     public static File STATUS_DIRECTORY_NEW = new File(Environment.getExternalStorageDirectory() +

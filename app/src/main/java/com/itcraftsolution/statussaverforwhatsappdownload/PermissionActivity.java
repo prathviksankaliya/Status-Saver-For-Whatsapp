@@ -87,7 +87,6 @@ public class PermissionActivity extends AppCompatActivity {
         intent.putExtra("android.provider.extra.INITIAL_URI", uri);
         intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
         startActivityForResult(intent,6);
-
     }
 
     @Override

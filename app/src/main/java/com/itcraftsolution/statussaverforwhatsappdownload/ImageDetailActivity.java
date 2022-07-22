@@ -82,11 +82,11 @@ public class ImageDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 File fdelete = new File(uri.getPath());
+//                File fdelete = new File(uri.getPath());
+
                 if (fdelete.exists()) {
                     if (fdelete.delete()) {
                         Toast.makeText(ImageDetailActivity.this, "Status Deleted Successfully", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(ImageDetailActivity.this, MainActivity.class);
-                        startActivity(intent);
                         finish();
 
                     } else {

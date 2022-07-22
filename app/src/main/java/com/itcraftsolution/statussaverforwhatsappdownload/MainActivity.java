@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -97,23 +98,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-//        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-//            @Override
-//            public void onActivityResult(ActivityResult result) {
-//                if(result.getResultCode() == RESULT_OK)
-//                {
-//                    if(result.getData() != null)
-//                    {
-//                        Uri treeUri = result.getData().getData();
-//                        getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION |
-//                                Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//                        Toast.makeText(MainActivity.this, ""+treeUri, Toast.LENGTH_SHORT).show();
-//                        DocumentFile documentFile = DocumentFile.fromTreeUri(MainActivity.this, treeUri);
-//
-//                    }
-//                }
-//            }
-//        });
+
 
     }
 

@@ -56,20 +56,20 @@ public class SaveFragment extends Fragment {
 //                File.separator + "StatusSaverForWhatsapp/");
 
 
-        if(!checkPermission())
-        {
-            showPermission();
-        }else{
-            if (Utils.STATUS_SAVER_DIR.exists()) {
-
-                getData(Utils.STATUS_SAVER_DIR);
-
-            }  else {
-                binding.savedRefershView.setRefreshing(false);
-                binding.rvSaved.setVisibility(View.GONE);
-//            Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
-            }
-        }
+//        if(!checkPermission())
+//        {
+//            showPermission();
+//        }else{
+//            if (Utils.STATUS_SAVER_DIR.exists()) {
+//
+//                getData(Utils.STATUS_SAVER_DIR);
+//
+//            }  else {
+//                binding.savedRefershView.setRefreshing(false);
+//                binding.rvSaved.setVisibility(View.GONE);
+////            Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+//            }
+//        }
 
 //            Toast.makeText(requireContext(), "Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
 
@@ -89,15 +89,7 @@ public class SaveFragment extends Fragment {
             }
         });
 
-        if(list.isEmpty())
-        {
-            binding.rvSaved.setVisibility(View.GONE);
-            Custom_Dialog dialog = new Custom_Dialog(requireContext());
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
-            dialog.setCancelable(false);
-            dialog.show();
-            binding.VNotFoundImage.setVisibility(View.VISIBLE);
-        }
+
 
         return binding.getRoot();
     }
@@ -118,7 +110,7 @@ public class SaveFragment extends Fragment {
                 return 0;
             }
         }));
-
+        list.clear();
         for (int i = 0; i < allfiles.length; i++) {
             File singlefile = allfiles[i];
 
@@ -164,6 +156,28 @@ public class SaveFragment extends Fragment {
 
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!checkPermission())
+        {
+            showPermission();
+        }else{
+            if (Utils.STATUS_SAVER_DIR.exists()) {
+                binding.rvSaved.setVisibility(View.VISIBLE);
+                binding.VNotFoundImage.setVisibility(View.GONE);
+                getData(Utils.STATUS_SAVER_DIR);
+            }
+        }
+        if(list.isEmpty())
+        {
+            binding.rvSaved.setVisibility(View.GONE);
+            Custom_Dialog dialog = new Custom_Dialog(requireContext());
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+            dialog.setCancelable(false);
+            dialog.show();
+            binding.VNotFoundImage.setVisibility(View.VISIBLE);
+        }
+    }
 }
 

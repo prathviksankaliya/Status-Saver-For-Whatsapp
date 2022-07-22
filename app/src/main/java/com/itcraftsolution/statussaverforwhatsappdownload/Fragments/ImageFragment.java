@@ -238,7 +238,7 @@ public class ImageFragment extends Fragment {
 
             DocumentFile file = DocumentFile.fromTreeUri(requireContext(), Uri.parse(istreeUri));
             DocumentFile[] documentFiles = file.listFiles();
-
+            list.clear();
             for (int i = 0; i < documentFiles.length; i++) {
                 documentFiles[i].getUri().toString();
                 DocumentFile singlefile = documentFiles[i];
@@ -293,7 +293,7 @@ public class ImageFragment extends Fragment {
                 return 0;
             }
         }));
-
+        list.clear();
         for (int i = 0; i < allfiles.length; i++) {
             File singlefile = allfiles[i];
 

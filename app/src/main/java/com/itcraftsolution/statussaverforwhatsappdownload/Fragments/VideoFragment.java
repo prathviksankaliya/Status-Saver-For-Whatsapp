@@ -100,7 +100,6 @@ public class VideoFragment extends Fragment {
                     {
                         loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
                     }
-
                 }
                 binding.refreshVideo.setRefreshing(false);
             }
@@ -140,7 +139,7 @@ public class VideoFragment extends Fragment {
                 requireContext().getContentResolver().takePersistableUriPermission(Uri.parse(istreeUri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 DocumentFile file = DocumentFile.fromTreeUri(requireContext(), Uri.parse(istreeUri));
                 DocumentFile[] documentFiles = file.listFiles();
-
+                list.clear();
                 for (int i = 0; i < documentFiles.length; i++) {
                     documentFiles[i].getUri().toString();
                     DocumentFile singlefile = documentFiles[i];
@@ -173,7 +172,7 @@ public class VideoFragment extends Fragment {
                 return 0;
             }
         }));
-
+        list.clear();
         for (int i = 0; i < allfiles.length; i++) {
             File singlefile = allfiles[i];
 

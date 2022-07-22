@@ -73,8 +73,6 @@ public class VideoDetailActivity extends AppCompatActivity {
                 if (fdelete.exists()) {
                     if (fdelete.delete()) {
                         Toast.makeText(VideoDetailActivity.this, "Status Deleted Successfully", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(VideoDetailActivity.this, MainActivity.class);
-                        startActivity(intent);
                         finish();
 
                     } else {
