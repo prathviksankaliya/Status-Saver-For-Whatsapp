@@ -27,8 +27,7 @@ public class PermissionActivity extends AppCompatActivity {
     private ActivityPermissionBinding binding;
     private SharedPreferences spf;
     private boolean isPermissionGranted, isGranted;
-
-
+    private String startDir, finalDir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,15 +62,14 @@ public class PermissionActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void folderPermission()
     {
-        String targetUri = null;
         if(Utils.STATUS_DIRECTORY_GBWHATSAPP.exists())
         {
-            targetUri = "GBWhatsApp%2FMedia%2F.Statuses";
+            startDir = "GBWhatsApp%2FMedia%2F.Statuses";
         }else if(Utils.STATUS_DIRECTORY_NEW.exists())
         {
-            targetUri = "Android%2Fmedia%2Fcom.whatsapp%2FWhatsApp%2FMedia%2F.Statuses";
+            startDir = "Android%2Fmedia%2Fcom.whatsapp%2FWhatsApp%2FMedia%2F.Statuses";
         }else if(Utils.STATUS_DIRECTORY.exists()){
-            targetUri = "WhatsApp%2FMedia%2F.Statuses";
+            startDir = "WhatsApp%2FMedia%2F.Statuses";
         }else{
             Toast.makeText(PermissionActivity.this, "Can't Find Directory!!", Toast.LENGTH_SHORT).show();
         }
@@ -80,12 +78,11 @@ public class PermissionActivity extends AppCompatActivity {
 
         Uri uri = intent.getParcelableExtra("android.provider.extra.INITIAL_URI");
         String scheme = uri.toString();
-        scheme = scheme.replace("/root/", "/tree/");
-        scheme = scheme + "%3A" + targetUri;
+        scheme = scheme.replace("/root/", "/document/");
+        finalDir = scheme + "%3A" + startDir;
 
-        uri = Uri.parse(scheme);
+        uri = Uri.parse(finalDir);
         intent.putExtra("android.provider.extra.INITIAL_URI", uri);
-        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
         startActivityForResult(intent,6);
     }
 
@@ -97,18 +94,23 @@ public class PermissionActivity extends AppCompatActivity {
             if(data != null)
             {
                 Uri treeUri = data.getData();
-                getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                if(treeUri.getPath().endsWith(".Statuses"))
+                {
+                    getContentResolver().takePersistableUriPermission(treeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                DocumentFile documentFile = DocumentFile.fromTreeUri(PermissionActivity.this, treeUri);
+                    DocumentFile documentFile = DocumentFile.fromTreeUri(PermissionActivity.this, treeUri);
 
+                    SharedPreferences.Editor edit = spf.edit();
+                    edit.putBoolean("isGranted", true);
+                    edit.putString("PATH", treeUri.toString());
+                    edit.apply();
 
-                SharedPreferences.Editor edit = spf.edit();
-                edit.putBoolean("isGranted", true);
-                edit.putString("PATH", treeUri.toString());
-                edit.apply();
+                    Intent intent = new Intent(PermissionActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(this, "Something Went Wrong!!", Toast.LENGTH_SHORT).show();
+                }
 
-                Intent intent = new Intent(PermissionActivity.this, MainActivity.class);
-                startActivity(intent);
 //                DocumentFile[] documentFiles = documentFile.listFiles();
 //                for (int i = 0; i < documentFiles.length; i++) {
 //                    documentFiles[i].getUri().toString();

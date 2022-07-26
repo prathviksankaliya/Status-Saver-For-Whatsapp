@@ -48,7 +48,6 @@ public class Utils {
     public static File STATUS_DIRECTORY = new File(Environment.getExternalStorageDirectory() +
             File.separator + "/WhatsApp/Media/.Statuses");
 
-
     public static File STATUS_DIRECTORY_NEW = new File(Environment.getExternalStorageDirectory() +
             File.separator + "Android/media/com.whatsapp/WhatsApp/Media/.Statuses");
 
@@ -293,6 +292,7 @@ public class Utils {
 //        notificationManager.createNotificationChannel(channel);
 //    }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void showNotification(Context context, File destFile) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -310,7 +310,7 @@ public class Utils {
 
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         PendingIntent pendingIntent =
-                PendingIntent.getActivity(context, 0, intent, 0);
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.Builder notification =
                 new NotificationCompat.Builder(context, CHANNEL_NAME);
