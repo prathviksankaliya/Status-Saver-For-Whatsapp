@@ -49,6 +49,9 @@ public class Utils {
     public static File STATUS_DIRECTORY_NEW = new File(Environment.getExternalStorageDirectory() +
             File.separator + "Android/media/com.whatsapp/WhatsApp/Media/.Statuses");
 
+    public static File STATUS_DIRECTORY_WP_Business = new File(Environment.getExternalStorageDirectory() +
+            File.separator + "Android/media/com.whatsapp.w4b/WhatsApp Business/Media/.Statuses");
+
     public static File STATUS_DIRECTORY_GBWHATSAPP = new File(Environment.getExternalStorageDirectory() +
             File.separator + "/GBWhatsapp/Media/.statuses");
     //

@@ -58,15 +58,19 @@ public class PermissionActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     public void folderPermission() {
-        if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
-            startDir = "GBWhatsApp%2FMedia%2F.Statuses";
-        } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
+        if (Utils.STATUS_DIRECTORY_NEW.exists()) {
             startDir = "Android%2Fmedia%2Fcom.whatsapp%2FWhatsApp%2FMedia%2F.Statuses";
         } else if (Utils.STATUS_DIRECTORY.exists()) {
             startDir = "WhatsApp%2FMedia%2F.Statuses";
-        } else {
+        } else if (Utils.STATUS_DIRECTORY_WP_Business.exists()) {
+            startDir = "Android%2Fmedia%2Fcom.whatsapp.w4b%2FWhatsApp Business%2FMedia%2F.Statuses";
+        } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
+            startDir = "GBWhatsApp%2FMedia%2F.Statuses";
+        }else
+        {
             Toast.makeText(PermissionActivity.this, "Can't Find Directory!!", Toast.LENGTH_SHORT).show();
         }
+
         StorageManager storageManager = (StorageManager) getSystemService(Context.STORAGE_SERVICE);
         Intent intent = storageManager.getPrimaryStorageVolume().createOpenDocumentTreeIntent();
 
