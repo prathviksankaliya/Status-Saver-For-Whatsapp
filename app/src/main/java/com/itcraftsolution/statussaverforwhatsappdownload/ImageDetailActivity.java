@@ -2,15 +2,11 @@ package com.itcraftsolution.statussaverforwhatsappdownload;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.Image;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -35,7 +31,6 @@ public class ImageDetailActivity extends AppCompatActivity {
     private Animation fabOpen, fabClose, rotateForward, rotatebackward;
     private int DURATION = 300;
     private boolean isOpen = false;
-    private boolean isSaved;
     private Uri uri;
 
     @Override
@@ -82,7 +77,6 @@ public class ImageDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 File fdelete = new File(uri.getPath());
-//                File fdelete = new File(uri.getPath());
 
                 if (fdelete.exists()) {
                     if (fdelete.delete()) {
@@ -104,37 +98,29 @@ public class ImageDetailActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.Q)
             @Override
             public void onClick(View v) {
-                if(!checkPermission())
-                {
+                if (!checkPermission()) {
                     showPermission();
-                }else{
+                } else {
                     File file = new File(ImageUri);
-                    Statues status = new Statues(file.getName() , filepath , file , uri);
-                    Utils.saveImgIntoGallery( ImageDetailActivity.this, status);
-//                    Utils.copyFile(status, ImageDetailActivity.this);
+                    Statues status = new Statues(file.getName(), filepath, file, uri);
+                    Utils.saveImgIntoGallery(ImageDetailActivity.this, status);
                 }
             }
         });
 
     }
 
-    private void LoadData()
-    {
+    private void LoadData() {
         ImageUri = getIntent().getStringExtra("URI");
         filepath = getIntent().getStringExtra("FILE_PATH");
         uri = Uri.parse(ImageUri);
         Glide.with(ImageDetailActivity.this).load(uri).into(binding.FullSizeImage);
 
-        if(getIntent().getBooleanExtra("isSaved", false))
-        {
+        if (getIntent().getBooleanExtra("isSaved", false)) {
             binding.fabDetailsDownload.setVisibility(View.GONE);
             binding.fabDetailsDelete.setVisibility(View.INVISIBLE);
             binding.fabDetailsShare.setImageResource(R.drawable.ic_baseline_repeat_24);
         }
-
-
-//        binding.FullSizeImage.setImageURI(uri);
-
     }
 
     private void animateFab() {
@@ -163,15 +149,12 @@ public class ImageDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void showPermission()
-    {
+    private void showPermission() {
         // permission for 23 to 29 SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(ContextCompat.checkSelfPermission(ImageDetailActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(ImageDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(ImageDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(ImageDetailActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(ImageDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ImageDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
             }
         }
     }

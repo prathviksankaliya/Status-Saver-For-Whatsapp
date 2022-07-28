@@ -25,7 +25,6 @@ public class Custom_Dialog_Privacy extends Dialog {
         setContentView(R.layout.custom_dialog_privacy);
         btn = findViewById(R.id.btnOk);
 
-
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

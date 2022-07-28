@@ -1,13 +1,11 @@
 package com.itcraftsolution.statussaverforwhatsappdownload;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SpalshActivity extends AppCompatActivity {
 
@@ -22,12 +20,11 @@ public class SpalshActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(spf.getBoolean("isGranted", false))
-                {
-                     intent = new Intent(SpalshActivity.this , MainActivity.class);
-                }else{
+                if (spf.getBoolean("isGranted", false)) {
+                    intent = new Intent(SpalshActivity.this, MainActivity.class);
+                } else {
 
-                     intent = new Intent(SpalshActivity.this , PermissionActivity.class);
+                    intent = new Intent(SpalshActivity.this, PermissionActivity.class);
                 }
                 startActivity(intent);
                 finish();

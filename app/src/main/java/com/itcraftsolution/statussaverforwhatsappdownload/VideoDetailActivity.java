@@ -2,15 +2,12 @@ package com.itcraftsolution.statussaverforwhatsappdownload;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.util.Util;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
 import com.itcraftsolution.statussaverforwhatsappdownload.databinding.ActivityVideoDetailBinding;
@@ -36,7 +32,6 @@ public class VideoDetailActivity extends AppCompatActivity {
     private Animation fabOpen, fabClose, rotateForward, rotatebackward;
     private int DURATION = 300;
     private boolean isOpen = false;
-    private boolean isSaved;
     private Uri uri;
 
     @Override
@@ -47,6 +42,7 @@ public class VideoDetailActivity extends AppCompatActivity {
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
+
         LoadData();
 
         fabOpen = AnimationUtils.loadAnimation(VideoDetailActivity.this, R.anim.fab_open);
@@ -103,24 +99,22 @@ public class VideoDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(!checkPermission())
-                {
+                if (!checkPermission()) {
                     showPermission();
-                }else{
-                    File file = new File( filepath);
-                    Statues status = new Statues(file.getPath(), filepath , file , uri);
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                    {
-                        Utils.saveImgIntoGallery( VideoDetailActivity.this, status);
-                    }else{
+                } else {
+                    File file = new File(filepath);
+                    Statues status = new Statues(file.getPath(), filepath, file, uri);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        Utils.saveImgIntoGallery(VideoDetailActivity.this, status);
+                    } else {
                         Utils.copyFile(status, VideoDetailActivity.this);
                     }
                 }
             }
         });
     }
-    private void LoadData()
-    {
+
+    private void LoadData() {
         VideoUri = getIntent().getStringExtra("URI");
         filepath = getIntent().getStringExtra("FILE_PATH");
         uri = Uri.parse(VideoUri);
@@ -140,8 +134,7 @@ public class VideoDetailActivity extends AppCompatActivity {
             }
         });
 
-        if(getIntent().getBooleanExtra("isSaved", false))
-        {
+        if (getIntent().getBooleanExtra("isSaved", false)) {
             binding.fabDetailsDownload.setVisibility(View.GONE);
             binding.fabDetailsDelete.setVisibility(View.INVISIBLE);
             binding.fabDetailsShare.setImageResource(R.drawable.ic_baseline_repeat_24);
@@ -175,15 +168,12 @@ public class VideoDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void showPermission()
-    {
+    private void showPermission() {
         // permission for 23 to 29 SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(ContextCompat.checkSelfPermission(VideoDetailActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(VideoDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(VideoDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(VideoDetailActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(VideoDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(VideoDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
             }
         }
     }

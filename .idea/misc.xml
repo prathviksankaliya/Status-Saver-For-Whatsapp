@@ -6,9 +6,13 @@
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable-v24/ic_baseline_arrow_circle_down_24.xml" value="0.18" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/btn_shape.xml" value="0.21" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_arrow_circle_down_24.xml" value="0.1795" />
+        <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.279" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_grain_24.xml" value="0.1795" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.21" />
+        <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_repeat_24.xml" value="0.279" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.18" />
+        <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_baseline_signal_wifi_off_24.xml" value="0.279" />
+        <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/ic_launcher_background.xml" value="0.279" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/round_back_1000.xml" value="0.21" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/drawable/round_back_white.xml" value="0.21" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/activity_image_detail.xml" value="0.27447916666666666" />
@@ -18,7 +22,7 @@
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/activity_splash.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/activity_video_detail.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/custom_dialog_layout.xml" value="0.264" />
-        <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/custom_dialog_privacy.xml" value="0.15244431588082152" />
+        <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/custom_dialog_privacy.xml" value="0.264" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/fragment_details_sacreen.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/fragment_home.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/Shadow/AndroidStudioProjects/ITCraftSolution/StatusSaverforWhatsappDownload/app/src/main/res/layout/fragment_image.xml" value="0.27447916666666666" />

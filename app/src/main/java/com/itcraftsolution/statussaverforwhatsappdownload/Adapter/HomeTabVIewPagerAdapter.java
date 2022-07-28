@@ -11,7 +11,7 @@ import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.VideoFragmen
 
 public class HomeTabVIewPagerAdapter extends FragmentStateAdapter {
 
-    private String [] tabTitles = new String[]{"IMAGES" , "VIDEOS","SAVED"};
+    private String[] tabTitles = new String[]{"IMAGES", "VIDEOS", "SAVED"};
 
     public HomeTabVIewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
@@ -20,9 +20,8 @@ public class HomeTabVIewPagerAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position)
-        {
-            case 0 :
+        switch (position) {
+            case 0:
                 return new ImageFragment();
             case 1:
                 return new VideoFragment();

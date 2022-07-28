@@ -36,8 +36,6 @@ import java.util.Random;
 public class Utils {
 
     public static final String CHANNEL_NAME = "IT_CRAFT_SOLUTION";
-//    private static String APP_DIR = Environment.getExternalStorageDirectory().getPath() +
-//    File.separator + "StatusSaverForWhatsapp";
 
     public static final String APP_DIR = Environment.DIRECTORY_PICTURES +
             File.separator + "StatusSaverForWhatsapp";
@@ -53,15 +51,13 @@ public class Utils {
 
     public static File STATUS_DIRECTORY_GBWHATSAPP = new File(Environment.getExternalStorageDirectory() +
             File.separator + "/GBWhatsapp/Media/.statuses");
-//
+    //
     public static File RootDirectorywhatsapp =
-            new File(Environment.getExternalStorageDirectory()+ "/StatusSaverForWhatsapp");
+            new File(Environment.getExternalStorageDirectory() + "/StatusSaverForWhatsapp");
 
 
-
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void copyFile(Statues status, Context context) {
-
-//        File file = new File(APP_DIR);
 
         if (!STATUS_SAVER_DIR.exists()) {
             if (!STATUS_SAVER_DIR.mkdirs()) {
@@ -90,13 +86,12 @@ public class Utils {
 
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void saveImgIntoGallery(Context context , Statues statues)
-    {
+    public static void saveImgIntoGallery(Context context, Statues statues) {
         FileOutputStream fos;
         String fileName;
         InputStream inputStream;
@@ -105,59 +100,8 @@ public class Utils {
         ContentValues contentValues = new ContentValues();
         File mediaFile = null;
         if (statues.getFilename().getName().endsWith(".mp4")) {
-//            fileName = "VID_" + currentDateTime + ".mp4";
-//
-//                mediaFile = new File(STATUS_SAVER_DIR + File.separator + fileName);
-//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                try {
-//                    inputStream = context.getContentResolver().openInputStream(statues.getUri());
-//                    contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
-//                    contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "video/*");
-//                    contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, APP_DIR);
-//                    Uri imageUri;
-//                    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-//                        Toast.makeText(context, "android 10", Toast.LENGTH_SHORT).show();
-//                        imageUri = context.getContentResolver().insert(MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY), contentValues);
-//                    } else {
-//                        imageUri = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues);
-//                    }
-//                    String selection = MediaStore.Video.Media.DURATION + " >= ?";
-//                    String[] selectionArgs = new String[] { String.valueOf(TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES))};
-//                    String sortOrder = MediaStore.Video.Media.DISPLAY_NAME + " ASC";
-//                    Uri contentUri = null;
-//                    try (Cursor cursor = context.getContentResolver().query(
-//                            imageUri,
-//                            null,
-//                            selection,
-//                            selectionArgs,
-//                            sortOrder
-//                    )) {
-//                        int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
-//
-//                        while (cursor.moveToNext()) {
-//                            long id = cursor.getLong(idColumn);
-//                            contentUri = ContentUris.withAppendedId(
-//                                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
-//                        }
-//                        fos = (FileOutputStream) context.getContentResolver().openOutputStream(contentUri);
-//                        if (inputStream != null) {
-//                            byte[] buf = new byte[8192];
-//                            int len;
-//                            while ((len = inputStream.read(buf)) > 0) {
-//                                fos.write(buf, 0, len);
-//                            }
-//                            inputStream.close();
-//                        }
-//                    }
-//                    fos.close();
-//                } catch (Exception e) {
-//                    Toast.makeText(context, "Not Save to Gallery" + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            }else{
-//                Toast.makeText(context, "non declare !!!", Toast.LENGTH_SHORT).show();
-//            }
             fileName = "VID_" + currentDateTime + ".mp4";
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 
                 try {
                     mediaFile = new File(STATUS_SAVER_DIR + File.separator + fileName);
@@ -180,7 +124,7 @@ public class Utils {
                 } catch (Exception e) {
                     Toast.makeText(context, "Not Save to Gallery" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 try {
                     mediaFile = new File(STATUS_SAVER_DIR + File.separator + fileName);
                     inputStream = context.getContentResolver().openInputStream(statues.getUri());
@@ -205,17 +149,16 @@ public class Utils {
             }
         } else {
             fileName = "IMG_" + currentDateTime + ".jpg";
-            try{
+            try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), statues.getUri());
                 mediaFile = new File(STATUS_SAVER_DIR + File.separator + fileName);
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
                     contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
                     contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, APP_DIR);
                     Uri imageUri = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                     fos = (FileOutputStream) context.getContentResolver().openOutputStream(imageUri);
-                }else{
+                } else {
                     Toast.makeText(context, "else part Image", Toast.LENGTH_SHORT).show();
                     if (!STATUS_SAVER_DIR.exists()) {
                         if (!STATUS_SAVER_DIR.mkdirs()) {
@@ -224,73 +167,17 @@ public class Utils {
                     }
                     fos = new FileOutputStream(mediaFile);
                 }
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
-
-            }catch (Exception e)
-            {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            } catch (Exception e) {
                 Toast.makeText(context, "Not Save to Gallery" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
-
         showNotification(context, mediaFile);
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(mediaFile));
+        context.sendBroadcast(intent);
 
-                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                intent.setData(Uri.fromFile(mediaFile));
-                context.sendBroadcast(intent);
-
-            }
-
-
-//    private static void showNotification(Context context,  File destFile, Statues status) {
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            makeNotificationChannel(context);
-//        }
-//
-//        Uri data = FileProvider.getUriForFile(context, "com.itcraftsolution.statussaverforwhatsappdownload" + ".provider", new File(destFile.getAbsolutePath()));
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//
-//        if (status.getFilename().getName().endsWith(".mp4")) {
-//            intent.setDataAndType(data, "video/*");
-//        } else {
-//            intent.setDataAndType(data, "image/*");
-//        }
-//        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//
-//        PendingIntent pendingIntent =
-//                PendingIntent.getActivity(context, 0, intent, 0);
-//
-//        NotificationCompat.Builder notification =
-//                new NotificationCompat.Builder(context, CHANNEL_NAME);
-//
-//        notification.setSmallIcon(R.drawable.logo128)
-//                .setContentTitle(destFile.getName())
-//                .setContentText("File Saved to" + APP_DIR)
-//                .setAutoCancel(true)
-//                .setContentIntent(pendingIntent);
-//
-//        NotificationManager notificationManager =
-//                (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-//
-//        assert notificationManager != null;
-//        notificationManager.notify(new Random().nextInt(), notification.build());
-//
-//        Toast.makeText( context,"Saved to Gallery", Toast.LENGTH_LONG).show();
-//
-//    }
-//
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    private static void makeNotificationChannel(Context context) {
-//
-//        NotificationChannel channel = new NotificationChannel(CHANNEL_NAME, "Saved", NotificationManager.IMPORTANCE_DEFAULT);
-//        channel.setShowBadge(true);
-//
-//        NotificationManager notificationManager =
-//                (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-//
-//        assert notificationManager != null;
-//        notificationManager.createNotificationChannel(channel);
-//    }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public static void showNotification(Context context, File destFile) {
@@ -327,7 +214,7 @@ public class Utils {
         assert notificationManager != null;
         notificationManager.notify(new Random().nextInt(), notification.build());
 
-        Toast.makeText( context,"Saved to Gallery", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Saved to Gallery", Toast.LENGTH_LONG).show();
 
     }
 
@@ -343,8 +230,4 @@ public class Utils {
         assert notificationManager != null;
         notificationManager.createNotificationChannel(channel);
     }
-
-
-
-
 }

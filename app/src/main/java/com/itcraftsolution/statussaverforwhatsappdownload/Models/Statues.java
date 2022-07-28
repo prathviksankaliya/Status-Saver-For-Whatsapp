@@ -5,9 +5,9 @@ import android.net.Uri;
 import java.io.File;
 import java.util.Comparator;
 
-public class Statues  {
+public class Statues {
 
-    private String name , path ;
+    private String name, path;
     private Uri uri;
     private File filename;
 

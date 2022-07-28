@@ -34,7 +34,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.sample_resent , parent , false);
+        View view = LayoutInflater.from(context).inflate(R.layout.sample_resent, parent, false);
         return new viewHolder(view);
     }
 
@@ -69,6 +69,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
 
     public static class viewHolder extends RecyclerView.ViewHolder {
         SampleResentBinding binding;
+
         public viewHolder(@NonNull View itemView) {
             super(itemView);
             binding = SampleResentBinding.bind(itemView);

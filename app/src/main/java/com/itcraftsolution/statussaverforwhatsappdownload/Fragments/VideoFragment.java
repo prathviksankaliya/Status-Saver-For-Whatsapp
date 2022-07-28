@@ -8,6 +8,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -17,12 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.ImageRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Adapter.VideoRecyclerAdapter;
 import com.itcraftsolution.statussaverforwhatsappdownload.Models.Statues;
 import com.itcraftsolution.statussaverforwhatsappdownload.Utils.Utils;
@@ -42,7 +40,6 @@ public class VideoFragment extends Fragment {
     private boolean isFolderPermissionGranted;
     private String istreeUri;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,17 +50,12 @@ public class VideoFragment extends Fragment {
 
         list = new ArrayList<>();
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-        {
-            Toast.makeText(requireContext(), "android 11 or up", Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getData();
-
-        }else {
-            Toast.makeText(requireContext(), "android 10 and low", Toast.LENGTH_SHORT).show();
-            if(!checkPermission())
-            {
+        } else {
+            if (!checkPermission()) {
                 showPermission();
-            }else {
+            } else {
                 if (Utils.STATUS_DIRECTORY.exists()) {
                     loadData(Utils.STATUS_DIRECTORY);
 
@@ -76,7 +68,7 @@ public class VideoFragment extends Fragment {
                     loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
 
                 } else {
-                    Toast.makeText(requireContext(), "up Can't Whatsapp File Find!! ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Can't Whatsapp Files Find!! ", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -85,31 +77,26 @@ public class VideoFragment extends Fragment {
         binding.refreshVideo.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     getData();
-                }else{
+                } else {
 
                     list = new ArrayList<>();
-                    if(Utils.STATUS_DIRECTORY.exists())
-                    {
+                    if (Utils.STATUS_DIRECTORY.exists()) {
                         loadData(Utils.STATUS_DIRECTORY);
-                    }else if (Utils.STATUS_DIRECTORY_NEW.exists()){
+                    } else if (Utils.STATUS_DIRECTORY_NEW.exists()) {
                         loadData(Utils.STATUS_DIRECTORY_NEW);
-                    }else if(Utils.STATUS_DIRECTORY_GBWHATSAPP.exists())
-                    {
+                    } else if (Utils.STATUS_DIRECTORY_GBWHATSAPP.exists()) {
                         loadData(Utils.STATUS_DIRECTORY_GBWHATSAPP);
                     }
                 }
                 binding.refreshVideo.setRefreshing(false);
             }
         });
-        if(list.isEmpty())
-        {
+        if (list.isEmpty()) {
             binding.rvVideo.setVisibility(View.GONE);
             binding.VNotFoundImage.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             adapter = new VideoRecyclerAdapter(requireContext(), list);
             binding.rvVideo.setAdapter(adapter);
             binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
@@ -117,44 +104,38 @@ public class VideoFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void setupRecyclerview(ArrayList<Statues> statusList)
-        {
-            adapter = new VideoRecyclerAdapter(requireContext(), statusList);
-            binding.rvVideo.setAdapter(adapter);
-            binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
-        }
+    private void setupRecyclerview(ArrayList<Statues> statusList) {
+        adapter = new VideoRecyclerAdapter(requireContext(), statusList);
+        binding.rvVideo.setAdapter(adapter);
+        binding.rvVideo.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
+    }
 
-        private void getData()
-        {
-            spf = requireContext().getSharedPreferences("FolderPermission", Context.MODE_PRIVATE);
+    private void getData() {
+        spf = requireContext().getSharedPreferences("FolderPermission", Context.MODE_PRIVATE);
+        isFolderPermissionGranted = spf.getBoolean("isGranted", false);
+        istreeUri = spf.getString("PATH", null);
 
-            isFolderPermissionGranted = spf.getBoolean("isGranted", false);
-            istreeUri = spf.getString("PATH", null);
+        if (istreeUri != null) {
+            Statues model;
 
+            requireContext().getContentResolver().takePersistableUriPermission(Uri.parse(istreeUri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            DocumentFile file = DocumentFile.fromTreeUri(requireContext(), Uri.parse(istreeUri));
+            DocumentFile[] documentFiles = file.listFiles();
+            list.clear();
+            for (int i = 0; i < documentFiles.length; i++) {
+                documentFiles[i].getUri().toString();
+                DocumentFile singlefile = documentFiles[i];
 
-            if(istreeUri != null)
-            {
-                Statues model;
+                if (singlefile.getUri().toString().endsWith(".mp4")) {
+                    File file1 = new File(singlefile.getUri().toString());
+                    model = new Statues("whats " + i, documentFiles[i].getName(), file1, singlefile.getUri());
+                    list.add(model);
 
-                requireContext().getContentResolver().takePersistableUriPermission(Uri.parse(istreeUri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                DocumentFile file = DocumentFile.fromTreeUri(requireContext(), Uri.parse(istreeUri));
-                DocumentFile[] documentFiles = file.listFiles();
-                list.clear();
-                for (int i = 0; i < documentFiles.length; i++) {
-                    documentFiles[i].getUri().toString();
-                    DocumentFile singlefile = documentFiles[i];
-
-                    if (singlefile.getUri().toString().endsWith(".mp4")) {
-                        File file1 = new File(singlefile.getUri().toString());
-                        model = new Statues("whats " + i, documentFiles[i].getName(), file1, singlefile.getUri());
-                        list.add(model);
-
-                    }
                 }
-                setupRecyclerview(list);
             }
+            setupRecyclerview(list);
         }
-
+    }
 
 
     private void loadData(File file) {
@@ -184,15 +165,13 @@ public class VideoFragment extends Fragment {
         }
         setupRecyclerview(list);
     }
-    private void showPermission()
-    {
+
+    private void showPermission() {
         // permission for 23 to 29 SDK
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-            {
-                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
             }
         }
 

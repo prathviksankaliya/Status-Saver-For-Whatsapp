@@ -8,10 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.itcraftsolution.statussaverforwhatsappdownload.Fragments.HomeFragment;
 import com.itcraftsolution.statussaverforwhatsappdownload.R;
 
 public class Custom_Dialog extends Dialog {
@@ -35,7 +32,7 @@ public class Custom_Dialog extends Dialog {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               dismiss();
+                dismiss();
             }
         });
     }

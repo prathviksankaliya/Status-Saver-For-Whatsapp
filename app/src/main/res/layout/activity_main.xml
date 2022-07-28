@@ -2,95 +2,94 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/drawerLayout"
-    tools:openDrawer="left"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:openDrawer="left">
 
-   <androidx.constraintlayout.widget.ConstraintLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-      <include
-          android:id="@+id/include"
-          layout="@layout/toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content" />
+        <include
+            android:id="@+id/include"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-      <com.google.android.material.tabs.TabLayout
-          android:id="@+id/tabHomeLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_margin="5dp"
-          android:elevation="5dp"
-          app:layout_constraintTop_toBottomOf="@+id/include"
-          app:tabIndicatorColor="@color/green"
-          app:tabSelectedTextColor="@color/font_color"
-          tools:layout_editor_absoluteX="5dp" />
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabHomeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_3mdp"
+            android:elevation="@dimen/_3mdp"
+            app:layout_constraintTop_toBottomOf="@+id/include"
+            app:tabIndicatorColor="@color/green"
+            app:tabSelectedTextColor="@color/font_color"
+            tools:layout_editor_absoluteX="5dp" />
 
-      <androidx.cardview.widget.CardView
-          android:id="@+id/cardView"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginHorizontal="5dp"
-          android:layout_marginVertical="8dp"
-          android:elevation="5dp"
-          app:cardCornerRadius="10dp"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.5"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/tabHomeLayout">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="@dimen/_6mdp"
+            android:elevation="@dimen/_3mdp"
+            app:cardCornerRadius="@dimen/_8mdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tabHomeLayout">
 
-         <TextView
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_gravity="center"
-             android:background="#11000000"
-             android:gravity="center"
-             android:padding="8dp"
-             android:text="The Status file will be Deleted 24 hours after published. \n Please Download and watch on Saved Page."
-             android:textColor="@color/font_color"
-             android:textSize="12sp" />
-      </androidx.cardview.widget.CardView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#11000000"
+                android:gravity="center"
+                android:padding="@dimen/_6mdp"
+                android:text="The Status file will be Deleted 24 hours after published. \n Please Download and watch on Saved Page."
+                android:textColor="@color/font_color"
+                android:textSize="@dimen/_10font_mdp" />
+        </androidx.cardview.widget.CardView>
 
-      <androidx.viewpager2.widget.ViewPager2
-          android:id="@+id/vpHome"
-          android:layout_width="match_parent"
-          android:layout_height="0dp"
-          android:layout_marginTop="8dp"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.5"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/cardView" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpHome"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_6mdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-      <androidx.fragment.app.FragmentContainerView
-          android:id="@+id/frMainContainer"
-          android:layout_width="match_parent"
-          android:layout_height="0dp"
-          android:visibility="gone"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintHorizontal_bias="0.5"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/include" />
-   </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/frMainContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-   <com.google.android.material.navigation.NavigationView
-       android:id="@+id/navView"
-       android:layout_width="wrap_content"
-       android:layout_height="match_parent"
-       android:layout_gravity="start"
-       app:headerLayout="@layout/headerlayout"
-       app:menu="@menu/nav_menu"
-       />
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/headerlayout"
+        app:menu="@menu/nav_menu" />
 </androidx.drawerlayout.widget.DrawerLayout>
 
-<!--<include
-       android:id="@+id/storagePermission"
-       layout="@layout/storage_dialog"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
+    <!--<include
+           android:id="@+id/storagePermission"
+           layout="@layout/storage_dialog"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
 
-       />-->
+           />-->

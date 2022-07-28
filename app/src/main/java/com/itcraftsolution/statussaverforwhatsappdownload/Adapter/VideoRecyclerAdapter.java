@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -39,7 +40,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.sample_resent , parent , false);
+        View view = LayoutInflater.from(context).inflate(R.layout.sample_resent, parent, false);
         return new viewHolder(view);
     }
 
@@ -50,13 +51,13 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
         Glide.with(context).load(model.getUri()).into(holder.binding.igResentSample);
         holder.binding.igVideo.setVisibility(View.VISIBLE);
         holder.binding.btnDownloadResent.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-                {
-                    Utils.saveImgIntoGallery( context, model);
-                }else{
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    Utils.saveImgIntoGallery(context, model);
+                } else {
                     Utils.copyFile(model, context);
                 }
             }
@@ -82,6 +83,7 @@ public class VideoRecyclerAdapter extends RecyclerView.Adapter<VideoRecyclerAdap
     public static class viewHolder extends RecyclerView.ViewHolder {
 
         SampleResentBinding binding;
+
         public viewHolder(@NonNull View itemView) {
             super(itemView);
 

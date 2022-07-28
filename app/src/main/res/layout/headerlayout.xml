@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:gravity="bottom"
-    android:padding="14dp"
+    android:layout_height="@dimen/_140mdp"
     android:background="@color/white"
-    android:layout_height="176dp">
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="@dimen/_9mdp">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -21,10 +21,10 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/font_color"
+        android:layout_marginTop="@dimen/_6mdp"
         android:text="@string/spalsh"
-        android:textSize="25sp"
+        android:textColor="@color/font_color"
+        android:textSize="@dimen/_20font_mdp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/imageView2"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -32,16 +32,16 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ICS"
-        android:textSize="14sp"
         android:fontFamily="serif"
+        android:text="@string/ICS"
         android:textColor="@color/font_color"
+        android:textSize="@dimen/_10font_mdp"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/_12mdp"
         android:background="@color/lightblack"
 
         />

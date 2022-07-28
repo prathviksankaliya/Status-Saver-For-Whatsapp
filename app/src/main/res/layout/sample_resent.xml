@@ -7,8 +7,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        app:cardCornerRadius="8dp"
+        android:layout_margin="@dimen/_3mdp"
+        app:cardCornerRadius="@dimen/_6mdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -44,10 +44,10 @@
 
             <ImageView
                 android:id="@+id/btnDownloadResent"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginEnd="12dp"
+                android:layout_width="@dimen/_28mdp"
+                android:layout_height="@dimen/_28mdp"
+                android:layout_marginEnd="@dimen/_8mdp"
+                android:layout_marginBottom="@dimen/_8mdp"
                 android:backgroundTint="@android:color/transparent"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/logo64"
