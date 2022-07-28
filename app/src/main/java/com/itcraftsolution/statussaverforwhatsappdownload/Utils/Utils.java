@@ -102,7 +102,6 @@ public class Utils {
         if (statues.getFilename().getName().endsWith(".mp4")) {
             fileName = "VID_" + currentDateTime + ".mp4";
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-
                 try {
                     mediaFile = new File(STATUS_SAVER_DIR + File.separator + fileName);
                     inputStream = context.getContentResolver().openInputStream(statues.getUri());

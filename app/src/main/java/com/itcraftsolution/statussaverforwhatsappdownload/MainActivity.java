@@ -97,14 +97,14 @@ public class MainActivity extends AppCompatActivity {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT,
-                "Hey check out Status Saver app for Whatsapp at: https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint");
+                "Hey check out Status Saver app for Whatsapp at: https://play.google.com/store/apps/developer?id=IT+Craft+Solution");
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
 
     private void rateUs() {
 
-        Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint");
+        Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.itcraftsolution.statussaverforwhatsappdownload");
 //        + MainActivity.this.getPackageName()
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         try {

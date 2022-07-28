@@ -88,7 +88,7 @@ public class VideoDetailActivity extends AppCompatActivity {
 
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("video/mp4");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "I'm using @StatusSaver app: https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint. #Statues #StatusSaver");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "I'm using @StatusSaver app: https://play.google.com/store/apps/details?id=com.itcraftsolution.statussaverforwhatsappdownload. #Statues #StatusSaver");
                 shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(VideoUri));
                 startActivity(Intent.createChooser(shareIntent, "Share Statues"));
             }
