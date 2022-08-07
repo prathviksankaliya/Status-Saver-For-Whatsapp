@@ -29,14 +29,13 @@ The Status is Instantly saved to your Gallery!
 
 • This app needs Allow permission Status Saver for Whatsapp Download to Access your photos and media from the .Statuses Folder.
 
-# Contact Me :
+## Connect With Me:
 
-  Linkdin : https://www.linkedin.com/in/prathviksankaliya/ <br/>
-  Gmail : prathviksankaliya@gmail.com<br/><br/>
+- [Linkedin](https://www.linkedin.com/in/prathviksankaliya/)
+- [Facebook](https://www.facebook.com/profile.php?id=100076613231212)
+  <br/><br/>
   
-  
-  
-  Status Saver Donwloader Live :
+Status Saver Donwloader Live :
 https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint<br/><br/>
 
 # Tech Involved: Android (Java), Material Ui, Media Api.
