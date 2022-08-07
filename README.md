@@ -32,13 +32,13 @@ The Status is Instantly saved to your Gallery!
 ## Connect With Me:
 
 - [Linkedin](https://www.linkedin.com/in/prathviksankaliya/)
-- [Facebook](https://www.facebook.com/profile.php?id=100076613231212)
   <br/><br/>
   
 Status Saver Donwloader Live :
 https://play.google.com/store/apps/details?id=com.itcraftsolution.picturepoint<br/><br/>
 
-# Tech Involved: Android (Java), Material Ui, Media Api.
+# Tech Involved: 
+Android (Java), Material Ui, Media Api.
 
 # Application ScreenShots:
 
